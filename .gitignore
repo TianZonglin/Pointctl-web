@@ -1,0 +1,15 @@
+/target
+
+# Generated Cuda files
+*.ptx
+
+# Generated dataset files
+*.ply
+*.csv
+data/*
+
+# Perf data files
+perf.data*
+
+# Generated flamegraphs
+flame.svg

@@ -1,0 +1,46 @@
+[package]
+name = "pointctl"
+version = "0.9.1"
+authors = ["Gijs van Steenpaal <gijs.van.steenpaal@gmail.com>"]
+edition = "2018"
+readme = "README.md"
+license = "MIT"
+categories = ["command-line-utilities", "science", "visualization"]
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# Used for parsing CLI commands
+clap = "^2.33.1"
+# Used for visualization
+kiss3d = { git = "https://github.com/gijs-s/kiss3d", branch = "master", features= ['conrod']}
+# kiss3d = { path = '../kiss3d', features = ['conrod']}
+# glutin = "*"
+nalgebra = "^0.25"
+# Used for generarting random points
+rand = "*"
+rand_distr = "0.4.0"
+# A n-dimensional r*-tree implementation. Used for fast nearest neighbors
+rstar = "0.8.2"
+# A fast vantage point tree implementation used for fast nearest neighbors
+vpsearch = { git = "https://github.com/gijs-s/vpsearch", branch = "rust"}
+# Used for better comparison for floating point numbers
+approx = "^0.3"
+# Used for easily getting some numeric values based on the types
+num-traits = "*"
+# Used for showing nice progres bars
+indicatif = { version = "^0.15", features = ["rayon"]}
+# Used for data-parallelism in some explanation mechanisms
+rayon = "^1.5.0"
+
+# Bidirectional color maps
+bimap = "^0.6.0"
+
+# Used for calling CUDA FFI
+# rustacuda = "0.1"
+# rustacuda_core = "0.1"
+# rustacuda_derive = "0.1"
+
+# [profile.release]
+# debug = true

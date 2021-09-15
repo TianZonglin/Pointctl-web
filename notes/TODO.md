@@ -1,0 +1,30 @@
+# What to do!
+
+ - [x] UI overlay using conrod
+    - [x] Basic text
+    - [x] Color mapping display
+    - [x] Buttons
+    - [x] Blob / point size slider
+    - [x] Gamma slider
+    - [x] Make calculate annotation button work
+    - [ ] Show explanation specific details
+       - [ ] Global and local rankings for da silva
+    - [x] Modifying the P/K
+       - [x] Set neighborhood P/K slider
+       - [x] Switch between neighborhood mode
+       - [x] Recompute button
+ - [x] 3D continous with billboarding in vertex shader
+ - [x] Van Driel explanation
+    - [x] Basic data definition
+    - [x] Algorithm outline
+    - [x] Algorithm implementation
+    - [ ] Algorithm tests
+ - [x] CLI improvements
+    - [x] Allow starting the program with sparser data -> Add calc button in UI
+ - [x] Keep the annotations on a per point level, allow switching of color maps.
+    - [x] Store annotations in the rtree
+    - [x] Support switching color maps
+ - [x] Z buffer sorting to fix opacity blending in 3D
+ - [x] Make r proportional to the projection width
+ - [ ] Handle jumping color schemes between recomputation?
+ - [x] Cleanup the Da silva variance based computation
