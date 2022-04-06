@@ -5,165 +5,122 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="/notice/driver.min.js"></script>
+		<link rel="stylesheet" href="driver.min.css">
 	</head>
-	<body style="background-color: white;margin:0">
+	<style>
+
+	</style>
+	<body style="background-color: rgb(230, 0, 0);margin:0">
+		<div class="cvs" id="cvs1" style="width: 300px;height: 300px;"></div>
+		<div class="cvs" id="cvs2" style="width: 300px;height: 300px;background-color: antiquewhite;"></div>
+		<div class="cvs" id="cvs3" style="width: 300px;height: 300px;"></div>
+		<div class="cvs" id="cvs4" style="width: 300px;height: 300px;"></div>
+		<div class="cvs" id="cvs5" style="width: 300px;height: 300px;"></div>
+		<div class="cvs" id="cvs6" style="width: 300px;height: 300px;"></div>
+ 
 		<script type="module">
 
 			import * as THREE from 'https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/build/three.module.js';
 			import Stats from 'https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/examples/jsm/libs/stats.module.js';
 			import { GUI } from 'https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/examples/jsm/libs/dat.gui.module.js';
 			import { OrbitControls } from "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/examples/jsm/controls/OrbitControls.js";
+		
+		let f1,f2,f3,f4,f5,f6;
+		f6=f1=f2=f3=f4=f5=false;	
+			let radius = 1;
+		function test(cvs,f){
 
+	
 			let camera, scene, renderer, stats;
 
+
+			renderer = new THREE.WebGLRenderer( { antialias: true } );
+			renderer.setPixelRatio( window.devicePixelRatio );//1
+			renderer.setSize( 300, 300 );
+			
+			stats = new Stats();
+			cvs.append( renderer.domElement );
+			cvs.append( stats.dom );
+
+
 			let mesh;
-			const amount = parseInt( window.location.search.substr( 1 ) ) || 55;
+			const amount = parseInt( window.location.search.substr( 1 ) ) || 45;
 			const count = Math.pow( amount, 3 );
-
 			const raycaster = new THREE.Raycaster();
-			const mouse = new THREE.Vector2( 1, 1 );
-
-			const color = new THREE.Color();
-
-			const params = {
-				initial: initial
-			};
-
 			const matrix = new THREE.Matrix4();
+			camera = new THREE.PerspectiveCamera( 60, 1, 0.1, 2000 );
+			camera.position.set( amount, amount, amount );
+			camera.lookAt( 0, 0, 0 );
+			scene = new THREE.Scene();
+			// without shading
+			const light = new THREE.AmbientLight( 0xffffff ); // soft white light
+			scene.add( light );
+			scene.background = new THREE.Color( 0xffffff );
 
-			init();
+			let file;
+			$.ajaxSettings.async = false;
+			$.getJSON("https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",function(result){
+				file = result;
+			});
+			$.ajaxSettings.async = true;
+
+ 
+			mesh = new THREE.InstancedMesh( new THREE.IcosahedronGeometry( radius, 1 ), new THREE.MeshPhongMaterial(), file.length );
+			for(let i = 0; i < file.length; i++){
+				let loc = file[i].locate;
+				let rgb = file[i].color;
+				matrix.setPosition( loc[0]*50, loc[1]*50, loc[2]*50);
+				mesh.setMatrixAt( i, matrix );
+				mesh.setColorAt( i, new THREE.Color(rgb[0], rgb[1], rgb[2]) );	
+			}
+			console.log(mesh.count);
+
+
+
+			scene.add( mesh );
+
+			new OrbitControls( camera, renderer.domElement );
+
+
+			let gui = new GUI();
+			const param = {"radius":2};
+			gui.add( param, 'radius', 0.5, 1, 0.1 ).onChange( function ( val ) {
+				radius = val;
+				theObjects[i].mesh.geometry.dynamic = true;
+				theObjects[i].mesh.geometry.vertices = theObjects[i].geo.vertices;  
+				theObjects[i].mesh.geometry.verticesNeedUpdate = true;
+			});
+
+			renderer.render( scene, camera );
+
 			animate();
-
-			function init() {
-
-				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 2000 );
-				camera.position.set( amount, amount, amount );
-				camera.lookAt( 0, 0, 0 );
-
-				scene = new THREE.Scene();
-
-				// without shading
-				const light = new THREE.AmbientLight( 0xffffff ); // soft white light
-				scene.add( light );
-
-				const geometry = new THREE.IcosahedronGeometry( 0.2, 3 );
-				const material = new THREE.MeshPhongMaterial();
-
-				const offset = ( amount - 1 ) / 2;
-
-				
- 
-				$.ajaxSettings.async = false;
-				$.getJSON("https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",function(result){
-					mesh = new THREE.InstancedMesh( geometry, material, result.length );
-					
-					for(let i = 0; i < result.length; i++){
-						let loc = result[i].locate;
-						let rgb = result[i].color;
-						matrix.setPosition( loc[0]*50, loc[1]*50, loc[2]*50);
-						
-						mesh.setMatrixAt( i, matrix );
-						mesh.setColorAt( i, new THREE.Color(rgb[0], rgb[1], rgb[2]) );
-						
-					}
-					console.log(mesh.count);
-				});
-				$.ajaxSettings.async = true;
-
-				scene.add( mesh );
-				initial();
-
-
-
-				const gui = new GUI();
-				gui.add( mesh, 'count', 0, count );
-				gui.add( params, 'initial' );
-
-				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				document.body.appendChild( renderer.domElement );
-
-				new OrbitControls( camera, renderer.domElement );
-
-				stats = new Stats();
-				document.body.appendChild( stats.dom );
-
-				window.addEventListener( 'resize', onWindowResize );
-				document.addEventListener( 'mousemove', onMouseMove );
-
-			}
-
-			function initial() {
- 
-				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 2000 );
-				camera.position.set( amount, amount, amount );
-				camera.lookAt( 0, 0, 0 );
-
-				scene = new THREE.Scene();
-
-				// without shading
-				const light = new THREE.AmbientLight( 0xffffff ); // soft white light
-				scene.add( light );
-
-				const geometry = new THREE.IcosahedronGeometry( 0.2, 3 );
-				const material = new THREE.MeshPhongMaterial();
-
-				const offset = ( amount - 1 ) / 2;
-				$.ajaxSettings.async = false;
-				$.getJSON("https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",function(result){
-					mesh = new THREE.InstancedMesh( geometry, material, result.length );
-					
-					for(let i = 0; i < result.length; i++){
-						let loc = result[i].locate;
-						let rgb = result[i].color;
-						matrix.setPosition( loc[0]*50, loc[1]*50, loc[2]*50);
-						
-						mesh.setMatrixAt( i, matrix );
-						mesh.setColorAt( i, new THREE.Color(rgb[0], rgb[1], rgb[2]) );
-						
-					}
-					console.log(mesh.count);
-				});
-				$.ajaxSettings.async = true;
-
-				scene.add( mesh );
-
-			}
-
-
-			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-
-			}
-
-			function onMouseMove( event ) {
-
-				event.preventDefault();
-
-				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-			}
-
 			function animate() {
-
 				requestAnimationFrame( animate );
-				render();
-
-			}
-
-			function render() {
-
-				renderer.render( scene, camera );
+				if(f)
+					renderer.render( scene, camera );
 				stats.update();
-
 			}
+			$(document).mousemove(function(e){
+				var x=e.clientX; //鼠标相对屏幕的横坐标
+				var y=e.clientY; //鼠标相对屏幕的纵坐标
+				var div_x_1 = cvs.offset().left; //box相对屏幕的横坐标
+				var div_y_1 = cvs.offset().top; //box相对屏幕的纵坐标
+				var div_x_2 = cvs.offset().left+cvs.outerWidth();
+				var div_y_2 = cvs.offset().top+cvs.outerHeight();
+				if(x < div_x_1 || x > div_x_2 || y < div_y_1 || y > div_y_2){
+					f = false;
+					//console.log('鼠标不在box盒子里');
+				}else{
+					//console.log('鼠标包含在box里');
+					f = true;
+				}
+			})
+		}
 
+		test($("#cvs1"),f1);
+ 
+ 
 		</script>
 	</body>
 </html>

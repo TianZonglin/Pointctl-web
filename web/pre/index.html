@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="https://glitch.com/favicon.ico" />
+
+    <title>User Study</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TianZonglin/tuchuang/file/driver.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TianZonglin/tuchuang/file/jquery.slider.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/TianZonglin/tuchuang/file/driver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/TianZonglin/tuchuang/file/jquery.slider.min.js"></script>
+
+    <style>
+
+      body { font-family: HK Grotesk; margin-left: 210px; margin-right: 210px; user-select: none; background-color: rgb(202, 209, 224); }
+      button,.btnn, input { font-family: inherit; font-size: 100%; background: #dadada; border: 1px solid #000000; box-sizing: border-box; border-radius: 4px; padding: 0.5rem 1rem; }
+      button { cursor: pointer; }
+  
+      /* Title h1 style */
+      h1 { color: #65647c; font-family: HK Grotesk; font-style: normal; font-weight: bold; font-size: 50px; line-height: 105%; margin: 2rem 0 0; }
+      h2 { color: #65647c; }
+      h3 { color: #65647c; }
+      label { color: #000000; font-weight: bold; }
+  
+      /* units */
+      .item { margin-bottom: 20px; break-inside: avoid; background: #f8f7f8; border-radius: 5px; padding: 5px; position: relative; height: 310px; margin-bottom: 80px; }
+      .item:hover { box-shadow: 3px 0px #a2a4c6; }
+  
+      .tracker{float:right;margin: 0;font-size: 20px;color:white;line-height: 0px;}
+
+      .page_start, .page_one_view, .page_six_view, .page_end { display: none; margin-top: 40px; width: 1300px; }
+      .jslider { width: 85%; margin-left: 5px; }
+      .graph { width: 1300px; border: 0px solid #275ea5; height: 5px; margin-top: 70px; }
+      .bar { display: block; background: #7895d1; float: left; height: 100%; text-align: center; font-family: Verdana; line-height: 5px; color: #FFF; border-radius: 5px; }
+      .hbtn { display: none; }
+      .dim_test { float: right; display: none; }
+      .dim_test > span { display: inline-block; vertical-align: top; }
+      .dim_test > img { line-height: 40px; display: inline-block; cursor: pointer; }
+  
+      .method { background-color: rgb(102, 110, 128); color: rgb(255, 255, 255); padding: 1px 6px 2px 6px; border-radius: 2px; }
+      .itemA { float: left; width: 75%; margin-bottom: 20px; height: 300px; background-color: rgb(255, 255, 255); }
+      .itemB { float: left; width: 25%; margin-bottom: 20px; height: 300px; background-color: rgb(201, 218, 248); }
+  
+      .blocks { font-family: inherit; font-size: 100%; background: #dadada; border: 1px solid #000000; box-sizing: border-box; border-radius: 4px; padding: 0.5rem 1rem; cursor: pointer; }
+      .blocks2 { font-family: inherit; font-size: 19px; font-weight: 600; border: 0px solid #000000; box-sizing: border-box; border-radius: 4px; padding: 0.5rem 1rem; }
+      .legend { display: none; border-top: 1px dotted #000; border-bottom: 1px dotted #000; margin-left: 5px; margin-right: 10px; border-radius: 5px; }
+      .lg_unit { padding: 2px 0px 0px 2px; border: 1px dotted #000; border-radius: 5px; cursor: pointer; font-size: 12px;}
+      .lg_unit:hover { background-color: rgb(189, 189, 189); }
+      .gray { background-color: rgb(189, 189, 189); }
+  
+      .arrow_box { animation: glow 800ms ease-out infinite alternate; }
+      @keyframes glow {
+        0% { }
+        100% { box-shadow: 0 0 5px rgb(221 159 75), 0px 0px 25px 5px rgb(221 159 75), 0 1px 0 rgb(221 159 75); } }
+      .disabled { pointer-events: none; cursor: default; opacity: 0.35; }
+      #root { margin: 0 auto; width: 1300px; column-count: 3; column-gap: 20px; }
+  
+      /* Basic page style resets */
+      * { box-sizing: border-box; }
+      /* Import fonts */
+      @font-face {
+        font-family: HK Grotesk;
+        src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Regular.otf?v=1603136326027")
+          format("opentype"); }
+      @font-face {
+        font-family: HK Grotesk;
+        font-weight: bold;
+        src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Bold.otf?v=1603136323437")
+          format("opentype"); }
+  
+   </style>
+  
+  </head>
+  <body> 
+    <span class="tracker">1</span>
+    <div class="page_start">
+      <h2> Introduction - dataset</h2>
+      <br>
+
+      <div style="float:left; font-size:18px;padding:10px;background-color: bisque;width: 400px;height: 700px;border: 2px #65647c dashed;">
+      <b>Wine Quality Data Set<br> (WineQuality)</b><br><br>
+      Attribute Information:<br><br>
+
+      For more information, read <a href="http://www3.dsi.uminho.pt/pcortez/wine/"> [Cortez et al., 2009]</a>.<br>
+      Input variables (based on physicochemical tests):<br>
+      1 - fixed acidity<br>
+      2 - volatile acidity<br>
+      3 - citric acid<br>
+      4 - residual sugar<br>
+      5 - chlorides<br>
+      6 - free sulfur dioxide<br>
+      7 - total sulfur dioxide<br>
+      8 - density<br>
+      9 - pH<br>
+      10 - sulphates<br>
+      11 - alcohol<br>
+      Output variable (based on sensory data):<br>
+      12 - quality (score between 0 and 10)<br>
+      </div>
+      <div style="margin-left:20px;float:left; font-size:18px;padding:10px;background-color: bisque;width: 400px;height: 700px;border: 2px #65647c dashed;">
+        <b>Beijing Multi-Site Air-Quality Data Data Set (CityPollution)</b><br><br>
+
+        Attribute Information:<br><br>
+
+       1 - No: row number<br>
+       2 - year: year of data in this row<br>
+       3 - month: month of data in this row<br>
+       4 - day: day of data in this row<br>
+       5 - hour: hour of data in this row<br>
+       6 - PM2.5: PM2.5 concentration (ug/m^3)<br>
+       7 - PM10: PM10 concentration (ug/m^3)<br>
+       8 - SO2: SO2 concentration (ug/m^3)<br>
+       9 - NO2: NO2 concentration (ug/m^3)<br>
+       10 - CO: CO concentration (ug/m^3)<br>
+       11 - O3: O3 concentration (ug/m^3)<br>
+       12 - TEMP: temperature (degree Celsius)<br>
+       13 - PRES: pressure (hPa)<br>
+       14 - DEWP: dew point temperature (degree Celsius)<br>
+       15 - RAIN: precipitation (mm)<br>
+       16 - wd: wind direction<br>
+       17 - WSPM: wind speed (m/s)<br>
+       18 - station: name of the air-quality monitoring site<br>
+      </div>
+      <div style="clear:both;"></div><br><br>
+      <button id="page1to2">NEXT</button>
+    </div>
+
+
+    <div class="page_one_view">
+      <div id="headers_one_view_guide">
+        <h2>Task1 - Guide - single view</h2>
+        <br>
+        <div style="background-color: bisque;width: 600px;height: 135px;border: 2px #65647c dashed;padding: 7px;font-size: 20px;">
+        <div class = "htext">
+        You now see a single projection, explained by N attribute. Select 3 attributes that shows the interesting structure in the projection.</div>
+        <span style="height:30px; padding: 0px 6px 1px 6px;float: right;cursor: pointer;" class="btnn" id="guide_task1">Guide</span>
+        <span style="height:30px; padding: 0px 6px 1px 6px;float: right;cursor: pointer;display: none;" class="btnn" id="guide_task2">Guide</span>
+        <span style="height:30px; padding: 0px 6px 1px 6px;float: right;cursor: pointer;display: none;" class="btnn" id="guide_task3">Guide</span>
+        
+        </div><br><br>
+      </div>
+      <div id="headers_one_view">
+      </div>
+      <div id="item0" style="margin-bottom: 20px; width:600px; break-inside: avoid; background: #f8f7f8; border-radius: 5px; padding:10px; position: relative; height:455px; margin-bottom: 80px;" >
+        <div style="float:left; width: 75%; margin-bottom: 20px;height:435px; background-color: antiquewhite;" id="cvs0"></div>
+        <div style="float:left; width: 25%; margin-bottom: 20px;height:435px; background-color: rgb(201, 218, 248);" id="panel0">
+          <br><button id="btn0" class="hbtn"></button> 
+          <div class="quest">
+            <div class="q0a"><input type="checkbox" id="q0a" name="q0a" value=""><label> Best</label></div><br>
+            <div class="q0b"><input type="checkbox" id="q0b" name="q0b" value=""><label> Top3</label></div><br>
+            <div class="q0c"><input type="checkbox" id="q0c" name="q0c" value=""><label> Worst</label></div><br>
+          </div>
+          <div class="legend lg0">
+          </div>
+          <br><br>
+          <div class="q0d">  
+            <label>&nbsp;Point Size:</label><br><br>
+            <input class="SliderSingle" type="slider" name="price" value="0.4" style="width: 50px;" id="slider0"/>
+          </div>
+        </div>
+        <div style="text-align: center;"><span class="method mtd0">projection</span></div>
+        <div class="graph"> <strong  style="display: none;width:100%;" id="bar" class="bar"></strong> </div>  
+      </div> 
+      <div class="dim_test" >
+        <span class="blocks2" style="padding-left: 0px !important;">YOU ARE LOOKING AT</span> <br>
+        <span class="blocks atx firstatx gd">Attribute A</span> <img class="firstatx gd">
+        <span class="blocks disabled atx gd">Attribute B</span> <img class="disabled gd">
+        <span class="blocks disabled atx gd">Attribute C</span> <img class="disabled gd"> 
+        <span class="blocks disabled atx gd">Attribute D</span> <img class="disabled gd">
+        
+        <button class="disabled" id="page14to15" style="display: inline-block; vertical-align: top;">NEXT</button>
+
+        <br> 
+      </div>
+      
+      <button id="page2to3" style="float:left;display: none;">NEXT</button>
+      <button id="page3to4" style="float:left;display: none;">NEXT</button>
+      <button id="page4to5" style="float:left;display: none;">NEXT</button>
+      <button id="page5to6" style="float:left;display: none;">NEXT</button>
+      <button id="page6to7" style="float:left;display: none;">NEXT</button> 
+      <button id="page7to8" style="float:left;display: none;">NEXT</button> 
+      <button id="page8to9" style="float:left;display: none;">NEXT</button>
+      <button id="page9to10" style="float:left;display: none;">NEXT</button>
+      
+    </div>
+    <div class="page_six_view">
+      <div id="headers_six_view"></div>
+      <div id="root">
+        <div class="item" >
+          <div class="itemA" id="cvs1"></div>
+          <div class="itemB"></div><button id="btn1" class="hbtn"></button>
+          <div style="text-align: center;"><span class="method" id="label1">projection A</span></div>
+        </div> 
+        <div class="item" >
+          <div class="itemA" id="cvs2"></div>
+          <div class="itemB"></div><button id="btn2" class="hbtn"></button>
+          <div style="text-align: center;"><span class="method" id="label2">projection B</span></div>
+        </div> 
+        <div class="item" >
+          <div class="itemA" id="cvs3"></div>
+          <div class="itemB"></div><button id="btn3" class="hbtn"></button>
+          <div style="text-align: center;"><span class="method" id="label3">projection C</span></div>
+        </div>    
+        <div class="item" >
+          <div class="itemA" id="cvs4"></div>
+          <div class="itemB"></div><button id="btn4" class="hbtn"></button>
+          <div style="text-align: center;"><span class="method" id="label4">projection D</span></div>
+        </div> 
+        <div class="item" >
+          <div class="itemA" id="cvs5"></div>
+          <div class="itemB"></div><button id="btn5" class="hbtn"></button>
+          <div style="text-align: center;"><span class="method" id="label5">projection E</span></div>
+        </div> 
+        <div class="item" >
+          <div class="itemA" id="cvs6"></div>
+          <div class="itemB"></div><button id="btn6" class="hbtn"></button>
+          <div style="text-align: center;"><span class="method" id="label6">projection F</span></div>
+        </div>    
+        
+        <button id="page10to11" style="float:right;display: none;">NEXT</button>
+        <button id="page11to12" style="float:right;display: none;">NEXT</button>
+        <button id="page12to13" style="float:right;display: none;">NEXT</button> 
+        <button id="page13to14" style="float:right;display: none;">NEXT</button> 
+      </div>
+      <div class="dim_test" >
+        <span class="blocks2">YOU ARE LOOKING AT</span> 
+        <span class="blocks atx firstatx">Attribute A</span> <img class="firstatx">
+        <span class="blocks disabled atx">Attribute B</span> <img class="disabled">
+        <span class="blocks disabled atx">Attribute C</span> <img class="disabled">
+        <span class="blocks disabled atx">Attribute D</span> <img class="disabled">
+        
+        <button class="disabled" id="page15to16" style="display: inline-block; vertical-align: top;">NEXT</button>
+        <button class="disabled" id="page16to17" style="display: inline-block; vertical-align: top;display: none;">NEXT</button>
+        <button class="disabled" id="page17to18" style="display: inline-block; vertical-align: top;display: none;">NEXT</button> 
+        <button class="disabled" id="page18to19" style="display: inline-block; vertical-align: top;display: none;">NEXT</button> 
+ 
+      </div>
+      <div class="graph"> <strong class="bar" style="width:100%;"></strong> </div>  
+    </div>
+    <div class="page_end" style="display:none">
+      <h2>LAST QUESTIONS</h2><br>
+      <div style="background-color: bisque;width: 700px;height: 200px;border: 2px #65647c dashed;padding: 5px;line-height: 25px;">
+        <div>Q1. What do you find eaist or hardest in the tasks?</div>
+        <textarea style="resize:none;width:670px;height:150px;color: #73758d;">Leave your anwsers or comments or suggestions here.</textarea>
+        </div>
+        <br><br>
+        <div style="background-color: bisque;width: 700px;height: 200px;border: 2px #65647c dashed;padding: 5px;line-height: 25px;">
+          <div>Q2. What do you find eaist or hardest in the interaction?</div>
+          <textarea style="resize:none;width:670px;height:150px;color: #73758d;">Leave your anwsers or comments or suggestions here.</textarea>
+        </div> <br><br>
+        <div style="background-color: bisque;width: 700px;height: 200px;border: 2px #65647c dashed;padding: 5px;line-height: 25px;">
+          <div>Q3. What do you find good or bad abuot working with 3D projections.</div>
+          <textarea style="resize:none;width:670px;height:150px;color: #73758d;">Leave your anwsers or comments or suggestions here.</textarea>
+        </div> <br><br>
+      <button id="page19to20">Submit</button>
+    </div>  
+
+  </body>
+</html>
+
+<script type="module">
+
+import * as THREE from 'https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/build/three.module.js';
+import Stats from 'https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/examples/jsm/libs/stats.module.js';
+import { GUI } from 'https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/examples/jsm/libs/dat.gui.module.js';
+import { OrbitControls } from "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/examples/jsm/controls/OrbitControls.js";
+
+$(function(){
+  // control flag for every canvas
+  let f1,f2,f3,f4,f5,f6,r1,r2,r3,r4,r5,r6;
+  f6=f1=f2=f3=f4=f5=false;	
+  r6=r1=r2=r3=r4=r5=1;	
+  let flag = [f1,f2,f3,f4,f5,f6];
+  let idname = ["#cvs1","#cvs2","#cvs3","#cvs4","#cvs5","#cvs6"];
+  let inputdata = [
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json"
+  ];
+ 
+  let tracker = 2;
+
+  //labels
+  let projection_a_to_f = ["projection_A","projection_B","projection_C","projection_D","projection_E","projection_F"];
+  let projection_g_to_l = ["projection_G","projection_H","projection_I","projection_J","projection_K","projection_L"];
+  
+
+  // only make the current canvas to update the anime to enhance the performance.
+  function test(canvas_id, flag_id, r, len, src){
+    let camera, scene, renderer, stats;
+    let mesh;
+    const amount = parseInt( window.location.search.substr( 1 ) ) || 45;
+    const count = Math.pow( amount, 3 );
+    const raycaster = new THREE.Raycaster();
+    const matrix = new THREE.Matrix4();
+    camera = new THREE.PerspectiveCamera( 60, 1, 0.1, 2000 );
+    camera.position.set( amount, amount, amount );
+    camera.lookAt( 0, 0, 0 );
+    scene = new THREE.Scene();
+    // without shading
+    const light = new THREE.AmbientLight( 0xffffff ); // soft white light
+    scene.add( light );
+    scene.background = new THREE.Color( 0xffffff );
+
+    const geometry = new THREE.IcosahedronGeometry(0.4, 1 );
+    const material = new THREE.MeshPhongMaterial();
+    const offset = ( amount - 1 ) / 2;
+    $.ajaxSettings.async = false;
+    $.getJSON(src,function(result){
+      mesh = new THREE.InstancedMesh( geometry, material, result.length );
+      for(let i = 0; i < result.length; i++){
+        let loc = result[i].locate;
+        let rgb = result[i].color;
+        matrix.setPosition( loc[0]*50, loc[1]*50, loc[2]*50);
+        mesh.setMatrixAt( i, matrix );
+        mesh.setColorAt( i, new THREE.Color(rgb[0], rgb[1], rgb[2]) );	
+      }
+      //console.log(mesh.count);
+    });
+    $.ajaxSettings.async = true;
+ 
+    scene.add( mesh );
+
+    renderer = new THREE.WebGLRenderer( { antialias: true } );
+    renderer.setPixelRatio( window.devicePixelRatio );//1
+    renderer.setSize( len, len );
+    new OrbitControls( camera, renderer.domElement );
+    stats = new Stats();
+    canvas_id.html("").append( renderer.domElement );
+    canvas_id.append( stats.dom );
+    renderer.render( scene, camera );
+    let isExsit = true;
+    animate();
+    function animate() {
+      requestAnimationFrame( animate );
+      if(flag_id && isExsit){
+        try{
+          renderer.render( scene, camera );
+        }catch(e){
+          console.log("already distoryed");
+          isExsit = false;
+        }
+        
+      }
+        
+      stats.update();
+    }
+    function cleanup(){
+      try{
+        console.log("clean up this webgl context");
+        renderer.forceContextLoss();
+        renderer.domElement = null;
+        renderer = null;
+        geometry.dispose();
+        material.dispose();
+      }catch(e){
+        console.log("already cleaned up");
+      }
+
+    }
+    // check if the pointer is in a canvas
+    $(document).mousemove(function(e){
+      var x=e.clientX; 
+      var y=e.clientY; 
+      let ccvs = canvas_id.parent();
+      var div_x_1 = ccvs.offset().left; 
+      var div_y_1 = ccvs.offset().top; 
+      var div_x_2 = ccvs.offset().left+ccvs.outerWidth();
+      var div_y_2 = ccvs.offset().top+ccvs.outerHeight();
+      if(x < div_x_1 || x > div_x_2 || y < div_y_1 || y > div_y_2){
+        flag_id = false;
+        //console.log('out');
+      }else{ 
+        //console.log('in');
+        flag_id = true;
+      }
+      
+    })
+    function updateGroupGeometry( mesh, g ) {
+      mesh.geometry.dispose();
+      mesh.geometry = g;
+    }
+    // render all sliders
+    //console.log("#slider"+r);
+    jQuery("#slider"+r).slider({ 
+      from: 0.1, to: 2, 
+      round: 1,
+      step: 0.01, 
+      format: { format: '##.0', locale: 'uk' }, 
+      dimension: '', 
+      skin: "round_plastic",
+      onstatechange: function( value ){
+        updateGroupGeometry( mesh,new THREE.IcosahedronGeometry(value, 1));
+      }
+    });
+    $("#btn"+r).click(function(){
+      cleanup();
+    });
+  }
+
+
+  // construct views
+  let headers = null;
+  let Task3_headers = null;
+  function generate_WebGL_Context(taskid, text,btnid,larr){
+
+    // destroy all older webgl context before go ahead
+    $(".hbtn").click();
+    console.log(btnid,"-> context has been destoryed.");
+
+    if(taskid == "Task2"){
+      headers  = '';
+      headers += text[0]; 
+      headers += '<div style="display:inline-block;background-color: bisque;width: 650px;height: 100px;border: 2px #65647c dashed;padding: 7px;font-size: 20px;">';
+      headers += 'We show here the same dataset with 6 ('+text[1]+') different projection methods. All are colored by our explanation which aims to <b>help you (users)';
+      headers += 'find interesting structures in the projection.</b>';
+      headers += '</div>';
+      headers += '<div style="display:inline-block;background-color: bisque;width: 600px;height: 100px;border: 2px #65647c dashed;padding: 7px;font-size: 20px;float:right">';
+      headers += '  <b>Q1.</b> Which of these 6 views do you find is the best one? <br>';
+      headers += '  <b>Q2.</b> Which of these 6 views do you find is the top 3? <br>';
+      headers += '  <b>Q3.</b> Which of these 6 views do you find is the worst one?';
+      headers += '  </div>';
+      headers += '<br><br><br>';
+      $("#headers_six_view").html(headers);
+
+    }else if(taskid == "Task3"){
+      Task3_headers = text[0];
+      Task3_headers+= '<div style="display:inline-block;background-color: bisque;width: 730px;height: 115px;border: 2px #65647c dashed;padding: 7px;font-size: 19px;">';
+      Task3_headers+= "You see again 6 projections "+text[1]+" of one dataset. Consider attribute 'Alcohol' (the red shape in first unit), ";
+      Task3_headers+= "<b>Which is the view in which attribute 'Alcohol' shows the most interesting (Best) structure to explain the projection?</b>";
+      Task3_headers+= "&nbsp;Note: the views were generated by different legends; you need to compare <b>4 attributes</b> in total.";
+      Task3_headers+= '</div>';
+      Task3_headers+= '<div style="display:inline-block;background-color: bisque;width: 540px;height: 115px;border: 2px #65647c dashed;padding: 7px;font-size: 19px;float:right">';
+      Task3_headers+= '  <b>Q1.</b> Which of these 6 views do you find is the best one? <br>';
+      Task3_headers+= '  <b>Q2.</b> Which of these 6 views do you find is the top 3? <br>';
+      Task3_headers+= '  <b>Q3.</b> Which of these 6 views do you find is the worst one?';
+      Task3_headers+= '  </div>';
+      Task3_headers+= '<br><br><br>';
+      $(".firstatx").removeClass("disabled");
+      $(".blocks2").text("YOU ARE LOOKING AT");
+      $(btnid).show();
+      //console.log(btnid);
+      $(btnid).addClass("disabled");
+      $("#headers_six_view").html(Task3_headers);
+    }else if(taskid == "Task1"){
+      headers  = '';
+      headers += text[0];
+      headers += '<div style="display:inline-block;background-color: bisque;width: 600px;height: 100px;border: 2px #65647c dashed;padding: 7px;font-size: 20px;">';
+      headers += 'You are given 2 minutes to rotate the structure, <b>you need to select 3 attributes that shows the interesting structure in the projection.</b>';
+      headers += '</div>';
+      headers += '<br><br><br>';
+      $("#headers_one_view_guide").hide();
+      $("#headers_one_view").html(headers);
+      $(".bar").css("margin-left", "-10px") ; 
+      $(".bar").css("width", "600px") ; 
+    }
+
+    if(taskid == "Task1"){
+      $( ".q0d" ).html('<label>&nbsp;Point Size:</label><br><br><input class="SliderSingle" type="slider" name="price" value="0.4"  id="slider0"/></div>');
+      $( ".mtd0" ).text(larr[0]);
+      test( $("#cvs0"), f0, 0, 435, "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json" );
+    }else if(taskid == "Task2" || taskid == "Task3"){
+      setTimeout(function(){
+        $("body").on("click", ".pa",function(){ update("pa", $(this).attr("id"));});
+        $("body").on("click", ".pc",function(){ update("pc", $(this).attr("id"));});
+        $("body").on("click", ".pb",function(){ update3("pb", $(this).attr("id"));});
+      }, 100);
+      $(".method").each(function(index){
+        $("#label"+(index+1)).text(larr[index]);
+      })
+      // insert the control options panel for each cell
+      $( ".itemB" ).each(function(index) {
+        index++;
+        let str = '<br>';
+            str +='<div class="panela"><label>&nbsp;Best</label> <input style="float:right;margin-right:5px" type="checkbox" class="pa" id="pa'+index+'" value="Bike"></div>';
+            str +='<div class="panelb"><label>&nbsp;Top3</label> <input style="float:right;margin-right:5px" type="checkbox" class="pb" id="pb'+index+'" value="Car"></div>';
+            str +='<div class="panelc"><label>&nbsp;Worst</label><input style="float:right;margin-right:5px" type="checkbox" class="pc" id="pc'+index+'" value="Boat"></div>';
+            str +='<br><br><br>';
+            str +='<div class="paneld"> ';
+            str +='  <label>&nbsp;Point Size:</label><br><br>';
+            str +='  <input class="SliderSingle" type="slider" name="price" value="0.4"  id="slider'+index+'"/>';
+            str +='</div>';
+        $(this).append(str);
+      });
+      $("label").css("font-size","15px");
+      $(".panela").css("margin-bottom","5px");
+      $(".panelb").css("margin-bottom","5px");
+      $(".panelc").css("margin-bottom","5px");
+
+      // render different canvas by different control flag and input data
+      for(let i = 0; i < 6; i ++){
+        test($(idname[i]),flag[i],i+1,300,inputdata[i]);
+      }
+    }
+    // timer on the bottom
+    function timer(){
+      let len = 0;
+      window.requestAnimationFrame(go);
+      function go(){ 
+        len = len + 10;
+        if(taskid=="Task1"){
+          $(".bar").css("width", 600 - len) ; 
+        }
+        else if(taskid=="Task2"||taskid=="Task3"){
+          $(".bar").css("width", 1300 - len) ; 
+          $(".bar").css("margin-left", len/2.0) ; 
+        }
+        //$("#bar").html('<span style="font-size:5px;line-height:5px">'+$("#bar").css("width")+'</span>');
+        if(parseInt($(".bar").css("width"))> 0){ 
+          window.requestAnimationFrame(go);
+        }else{
+          if(taskid=="Task2"||taskid=="Task1") {
+            $(btnid).show();
+          }
+        } 
+      }  
+    }
+    setTimeout(function(){timer();}, 2000);
+  }
+
+  // page to page control
+  let f0 = true;
+  $(".page_start").show();
+ 
+ 
+  // page to the introduction context of task 1
+  $("#page1to2").click(function(){ 
+    $(".tracker").text(tracker++);
+    $("#page1to2").remove();
+    $(".page_start").hide();
+    $(".page_six_view").hide();
+    $("#guide_task1").show();
+    $("#guide_task2").hide();
+    $("#guide_task3").hide();
+    $(".dim_test").hide();
+    $(".quest").hide();
+    let lgarr = [
+      {color:"#e97af5",name:"alcohol"},
+      {color:"#ffe2d5",name:"chlorldes"},
+      {color:"#e97a54",name:"residual_sugar"},
+      {color:"#2acc00",name:"total_sulfur_dioxide"},
+      {color:"#2acce4",name:"fixed_acidity"},
+      {color:"#ffe239",name:"density"},
+      {color:"#93b300",name:"free_sulfur_dioxide"},
+      {color:"#f1ac77",name:"volantile_acidity"}
+    ];
+    let lgstr = ""
+    for(let i = 0; i < lgarr.length;i ++){
+      lgstr += '<div class="lg_unit" id="unit'+i+'">';
+      lgstr += '<div style="display:inline-block;background-color:'+lgarr[i].color+';width:10px;height:10px;border: 1px solid #275ea5;" ></div>';
+      lgstr += '<span style="line-height: 12px;vertical-align: top;"><b>&nbsp;'+lgarr[i].name+'</b></span>';
+      lgstr += '</div>';
+    }
+    $(".lg0").html(lgstr);
+    $(".legend").show();
+
+    test( $("#cvs0"), f0, 0, 435, "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json" );
+    $(".page_one_view").show();
+  });
+ 
+  // check legend selected, at least 3
+  function test_Legend_Selected(){
+    if($(".gray").get().length < 3) return false;
+    else return true;
+  }
+ 
+  // multi-select for legend
+  let counter = 0;
+  let childid = [];
+  $("body").on("click", ".lg_unit",function(){ 
+    if($(".gray").get().length < 3){
+      if($(this).hasClass("gray")){
+        $(this).removeClass("gray");
+      }else{
+        $(this).addClass("gray");
+      }
+    }else{
+      if($(this).hasClass("gray")) {
+         $(this).removeClass("gray");
+      }  
+    }
+  });
+
+  // after 'how-to-use'
+  $("#guide_task1").click(function(){
+    $("#page2to3").show();
+    steps_task1();
+  });
+
+  // to the 1st page of task1
+  $("#page2to3").click(function(){
+    if(test_Legend_Selected()){
+      $(".tracker").text(tracker++);
+      $("#page2to3").hide();
+      $("#bar").show();
+      $(".page_one_view").hide();
+      $("canvas").remove();
+      $(".lg_unit").removeClass("gray");
+      setTimeout(function(){$(".page_one_view").show();}, 1000); 
+      generate_WebGL_Context(
+        "Task1",
+        ['<h2>Task1 - WineQuality (1/6)</h2>','<b>A</b>'],
+        "#page3to4",
+        ["projection_A"]
+      );
+    }else{
+      alert("you need to select at least 3 attributes!");
+      //console.log("you need to select at least 3 attributes!");
+    }
+  });
+
+  // to the 2nd page of task1
+  $("#page3to4").click(function(){
+    if(test_Legend_Selected()){
+      $(".tracker").text(tracker++);
+      $("#page3to4").hide();
+      $("#bar").show();
+      $(".page_one_view").hide();
+      $("canvas").remove();
+      $(".lg_unit").removeClass("gray");
+      setTimeout(function(){$(".page_one_view").show();}, 1000); 
+      generate_WebGL_Context(
+        "Task1",
+        ['<h2>Task1 - WineQuality (2/6)</h2>','<b>A</b>'],
+        "#page4to5",
+        ["projection_B"]
+      );
+    }else{
+      //console.log("you need to select at least 3 attributes!");
+      alert("you need to select at least 3 attributes!");
+    }
+  });
+
+  // 3/6 - task1
+  $("#page4to5").click(function(){
+    if(test_Legend_Selected()){
+      $(".tracker").text(tracker++);
+      $("#page4to5").hide();
+      $("#bar").show();
+      $(".page_one_view").hide();
+      $("canvas").remove();
+      $(".lg_unit").removeClass("gray");
+      setTimeout(function(){$(".page_one_view").show();}, 1000); 
+      generate_WebGL_Context(
+        "Task1",
+        ['<h2>Task1 - WineQuality (3/6)</h2>','<b>A</b>'],
+        "#page5to6",
+        ["projection_C"]
+      );
+    }else{
+      //console.log("you need to select at least 3 attributes!");
+      alert("you need to select at least 3 attributes!");
+    }
+  });
+
+  // 4/6 - task1
+  $("#page5to6").click(function(){
+    if(test_Legend_Selected()){
+      $(".tracker").text(tracker++);
+      $("#page5to6").hide();
+      $("#bar").show();
+      $(".page_one_view").hide();
+      $("canvas").remove();
+      $(".lg_unit").removeClass("gray");
+      setTimeout(function(){$(".page_one_view").show();}, 1000); 
+      generate_WebGL_Context(
+        "Task1",
+        ['<h2>Task1 - WineQuality (4/6)</h2>','<b>A</b>'],
+        "#page6to7",
+        ["projection_D"]
+      );
+    }else{
+      //console.log("you need to select at least 3 attributes!");
+      alert("you need to select at least 3 attributes!");
+    }
+  });
+
+  // 5/6 - task1
+  $("#page6to7").click(function(){
+    if(test_Legend_Selected()){
+      $(".tracker").text(tracker++);
+      $("#page6to7").hide();
+      $("#bar").show();
+      $(".page_one_view").hide();
+      $("canvas").remove();
+      $(".lg_unit").removeClass("gray");
+      setTimeout(function(){$(".page_one_view").show();}, 1000); 
+      generate_WebGL_Context(
+        "Task1",
+        ['<h2>Task1 - WineQuality (5/6)</h2>','<b>A</b>'],
+        "#page7to8",
+        ["projection_E"]
+      );
+    }else{
+      //console.log("you need to select at least 3 attributes!");
+      alert("you need to select at least 3 attributes!");
+    }
+  });
+
+  // to the 6th page of task1 (6/6), then go into the intro2
+  $("#page7to8").click(function(){
+    if(test_Legend_Selected()){
+      $(".tracker").text(tracker++);
+      $("#page7to8").hide();
+      $("#bar").show();
+      $(".page_one_view").hide();
+      $("canvas").remove();
+      $(".lg_unit").removeClass("gray");
+      setTimeout(function(){$(".page_one_view").show();}, 1000); 
+      generate_WebGL_Context(
+        "Task1",
+        ['<h2>Task1 - WineQuality (6/6)</h2>','<b>A</b>'],
+        "#page8to9",
+        ["projection_F"]
+      );
+    }else{
+      //console.log("you need to select at least 3 attributes!");
+      alert("you need to select at least 3 attributes!");
+    }
+  });
+
+  // start guiding
+  $("#guide_task2").click(function(){
+    $("#page9to10").show();
+    steps_task2();
+  });
+
+  // to the intro2
+  $("#page8to9").click(function(){
+    if(test_Legend_Selected()){
+      $("#page8to9").hide();
+      $(".tracker").text(tracker++);
+      $(".page_start").hide();
+      $(".page_one_view").hide();
+      $(".legend").hide();
+      $(".quest").show();
+      $("#headers_one_view_guide > h2").html('Task2 - Guide - interesting structures');
+      $(".htext").parent().css("height","130px");
+      $(".htext").html("<span>This page explains all functions you will see in this task, follow the guide windows to learn the details.<br> Press the 'Guide' button to see the description.</span>")
+      $("#headers_one_view_guide").show();
+      $("#headers_one_view").hide();
+      $("#guide_task1").hide();
+      $("#guide_task2").show();
+      $("#guide_task3").hide();
+      $( ".q0d" ).html('<label>&nbsp;Point Size:</label><br><br><input class="SliderSingle" type="slider" name="price" value="0.4"  id="slider0"/></div>');
+      test( $("#cvs0"), f0, 0, 435, "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json" );
+      setTimeout(function(){$(".page_one_view").show();}, 1000); 
+    }else{
+      //console.log("you need to select at least 3 attributes!");
+      alert("you need to select at least 3 attributes!");
+    }
+  });
+
+
+  function test_Checkbox_Selected(){
+    let check_pa, check_pb, check_pc;
+    check_pa = check_pb = check_pc = 0;
+    let checkboxs = document.getElementsByClassName("pa");
+    for(let i = 0; i < checkboxs.length; i ++) 
+      if(checkboxs[i].checked) 
+        check_pa++;
+    checkboxs = document.getElementsByClassName("pb");
+    for(let i = 0; i < checkboxs.length; i ++) 
+      if(checkboxs[i].checked) 
+        check_pb++;
+    checkboxs = document.getElementsByClassName("pc");
+    for(let i = 0; i < checkboxs.length; i ++) 
+      if(checkboxs[i].checked) 
+        check_pc++;
+    if(check_pa < 1){
+      //console.log("Please finish the question 'Best?'");
+      alert("Please finish the question 'Best?'");
+      return false;
+    }else if(check_pb < 3){
+      //console.log("Please finish the question 'TOP3?'");
+      alert("Please finish the question 'TOP3?'");
+      return false;
+    }else if(check_pc < 1){
+      //console.log("Please finish the question 'Worst?'");
+      alert("Please finish the question 'Worst?'");
+      return false;
+    }else{
+      return true;
+    }
+  }
+ 
+  // only let checkbox selected by one active.
+  function update(cname, id){  
+    let checkboxs = document.getElementsByClassName(cname);
+    for(let i = 0; i < checkboxs.length; i ++){
+      //console.log(checkboxs[i].id);
+      if(checkboxs[i].id != id){
+        checkboxs[i].checked=false;
+      }
+    }
+  }
+
+  function reset(){  
+    let checkboxs = document.getElementsByClassName("pa");
+    for(let i = 0; i < checkboxs.length; i ++){
+      checkboxs[i].checked=false; 
+    }
+    checkboxs = document.getElementsByClassName("pb");
+    for(let i = 0; i < checkboxs.length; i ++){
+      checkboxs[i].checked=false; 
+    }
+    checkboxs = document.getElementsByClassName("pc");
+    for(let i = 0; i < checkboxs.length; i ++){
+      checkboxs[i].checked=false; 
+    }
+  }
+
+  // let checkbox keep three selections, always drop the beginning one.
+  let cnt = 0;
+  let arr = [];
+  function update3(cname, id){  
+    arr[cnt] = id;
+    let tmp;
+    let check_pa = 0;
+    let checkboxs = document.getElementsByClassName("pb");
+    for(let i = 0; i < checkboxs.length; i ++) 
+      if(checkboxs[i].checked) 
+        check_pa++;
+    if(check_pa == 4) {
+      arr[0] = arr[1];
+      arr[1] = arr[2];
+      arr[2] = id;
+      cnt --;
+      let checkboxs = document.getElementsByClassName(cname);
+      for(let i = 0; i < checkboxs.length; i ++){
+        if(checkboxs[i].id == arr[0] || checkboxs[i].id == arr[1] || checkboxs[i].id == arr[2]){}
+        else{
+          checkboxs[i].checked=false;
+        }
+      }
+    }
+    //console.log(arr);
+    cnt++;
+  }
+ 
+  // to 1/4 task2
+  $("#page9to10").click(function(){
+    $(".tracker").text(tracker++);
+      $(".page_start").hide("");
+      $(".page_one_view").hide("");
+      $("#page9to10").hide();
+      $( ".itemB" ).html("");
+      generate_WebGL_Context(
+        "Task2",
+        ['<h2>Task2 - WineQuality (1/4)</h2>','<b>A</b> to <b>F</b>'],
+        "#page10to11",
+        projection_a_to_f
+      );
+      $(".page_six_view").show();
+  });
+
+  // to 2/4 task2
+  $("#page10to11").click(function(){
+    if(test_Checkbox_Selected()){
+      $(".tracker").text(tracker++);
+      $("#page10to11").hide();
+      $(".page_six_view").hide();
+      $("canvas").remove();
+      $( ".itemB" ).html("");
+      setTimeout(function(){$(".page_six_view").show();}, 1000); 
+      generate_WebGL_Context(
+        "Task2",
+        ['<h2>Task2 - WineQuality (2/4)</h2>','<b>G</b> to <b>L</b>'],
+        "#page11to12",
+        projection_g_to_l
+      );
+    }
+  });
+ 
+  // to 3/4 task2
+  $("#page11to12").click(function(){
+    if(test_Checkbox_Selected()){
+      $(".tracker").text(tracker++);
+      $("#page11to12").hide();
+      $(".page_six_view").hide();
+      $("canvas").remove();
+      $( ".itemB" ).html("");
+      setTimeout(function(){$(".page_six_view").show();}, 1000); 
+      generate_WebGL_Context(
+        "Task2",
+        ['<h2>Task2 - CityPollution (3/4)</h2>','<b>A</b> to <b>F</b>'],
+        "#page12to13",
+        projection_a_to_f
+      );
+    }
+  });
+
+  // to 4/4 task2
+  $("#page12to13").click(function(){
+    if(test_Checkbox_Selected()){
+      $(".tracker").text(tracker++);
+      $("#page12to13").hide();
+      $(".page_six_view").hide();
+      $("canvas").remove();
+      $( ".itemB" ).html("");
+      setTimeout(function(){$(".page_six_view").show();}, 1000); 
+      generate_WebGL_Context(
+        "Task2",
+        ['<h2>Task2 - CityPollution (4/4)</h2>','<b>G</b> to <b>L</b>'],
+        "#page13to14",
+        projection_g_to_l
+      );
+    }
+  });
+
+  let imgsrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAnCAYAAACMo1E1AAAABmJLR0QA/wD/AP+gvaeTAAABzklEQVRYhe2YP2taURiHn9rCpU7N0kGPFgS9i/"
+    +"PNpnQXx0xK/uzptxAc8glCWmqylGQQxT0ZdE/xgh9A8C6Z7kXpZobmDBdLI+e8R0rxWe7w47z8eB/OcA/s2bNb3hic+Qg0gHd/yH4Bty9fa0zK3fi+3yqVShvBfD4nDMM74Mi6GWbljpVS30"
+    +"ejEdlsNhUkSUKj0SCKoiPgzrbcW4MzP+M4DpbLZbler6cCz/OoVCoMh8PPwDWw3HU5gIcwDM+CIHifz+dTQbFYZLFYZGezWRn4YVPORKvmVCn1zaVe080BPMZxfOhSr005gHuXem20apzptd"
+    +"0cvKLX930Gg4GRXoly8Be9hULBWK+EVo24XqnNwYve1WpVrtVqqcBUr2Q5gPvpdCqmV1Kr5kwp9VVCr/Tm4Lfek1wu96FaraYCz/NYr9eMx+MD4Oa1QRkH5U6VUp+azeZGkCQJvV4P4HKbQd"
+    +"LlcplM5qLb7W4oBeh0OkRRdMuWN1a63FW73T4IgmAjmEwm9Pv9J+DLtsMkL4TYRdBIbU5Up3S5q1arJaZTI6FVXKfGdnNOdEqV20bnuelwG63OdGpMN+dUp205pzo1//Qf/3/3VrKzV6Y9e3"
+    +"bNM3nKJ/GGzhnJAAAAAElFTkSuQmCC";
+  $(".dim_test > img").attr("src",imgsrc);
+  $(".dim_test > img").click(function(){
+    if($(this).hasClass("gd")||test_Checkbox_Selected()){
+      /// save data ...
+      reset();
+      $(this).prev().addClass("disabled");
+      $(this).next().removeClass("disabled");
+      $(this).next().next().removeClass("disabled");
+      $(this).addClass("disabled");
+      if($(this).next().text()=="NEXT"){
+        $(".blocks2").text("Test finished, please go next.");
+        $(this).next().removeClass("disabled");
+      }
+      //console.log($(this).next().text());
+    }
+  });
+  $(".atx").click(function(){
+    if($(this).hasClass("gd")||test_Checkbox_Selected()){
+      /// save data ...
+      reset();
+      $(this).next().addClass("disabled");
+      $(this).next().next().removeClass("disabled");
+      $(this).next().next().next().removeClass("disabled");
+      $(this).addClass("disabled");
+      if($(this).next().next().text()=="NEXT"){
+        $(".blocks2").text("Test finished, please go next.");
+      }
+    }
+    //console.log($(this).next().next());
+  });
+
+  $("#page13to14").click(function(){
+    $(".tracker").text(tracker++);
+    $("#page13to14").hide();
+    $(".page_start").hide();
+    $(".page_six_view").hide();
+    $("#page8to9").hide();
+    $("#guide_task1").hide();
+    $("#guide_task2").hide();
+    $("#guide_task3").show();
+    $(".dim_test").show();
+    $(".dim_test").css("float","left");
+    $("#headers_one_view_guide > h2").html('Task3 - Guide - compare attributes');
+    $(".htext").parent().css("height","180px");
+    $(".htext").html("<span>You see again 6 projections of one dataset. Consider attribute 'Alcohol' (the red shape in first unit), "
+      + "<b>Which is the view in which attribute 'Alcohol' shows the most interesting (Best) structure to explain the projection?</b>" 
+      + "&nbsp;Note: the views were generated by different legends; you need to compare <b>4 attributes</b> in total.</span>");
+    
+    $( ".q0d" ).html('<label>&nbsp;Point Size:</label><br><br><input class="SliderSingle" type="slider" name="price" value="0.4"  id="slider0"/></div>');
+    test( $("#cvs0"), f0, 0, 435, "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json" );
+    $(".page_one_view").show();
+  });
+
+  
+  // start guiding
+  $("#guide_task3").click(function(){
+    $("#page14to15").show();
+    steps_task3();
+  });
+
+  //to 1/4 task3
+  $("#page14to15").click(function(){
+    $(".tracker").text(tracker++);
+    $(".dim_test").css("float","right");
+    $("#page14to15").remove();
+    $(".page_one_view").hide(); 
+    $("canvas").remove();
+    $( ".itemB" ).html("");
+    generate_WebGL_Context(
+      "Task3",
+      ['<h2>Task3 - WineQuality (1/4)</h2>','<b>A</b> to <b>F</b>'],
+      "#page15to16",
+      projection_a_to_f
+    );
+    $(".page_six_view").show();
+  });
+  
+  //to 2/4 task3
+  $("#page15to16").click(function(){
+    $(".tracker").text(tracker++);
+    $("#page15to16").remove();
+    $(".page_six_view").hide();
+    $("canvas").remove();
+    $( ".itemB" ).html("");
+    setTimeout(function(){$(".page_six_view").show();}, 1000); 
+    generate_WebGL_Context(
+      "Task3",
+      ['<h2>Task3 - WineQuality (2/4)</h2>','<b>G</b> to <b>L</b>'],
+      "#page16to17",
+      projection_g_to_l
+    );
+  });
+
+  //to 3/4 task3
+  $("#page16to17").click(function(){
+    $(".tracker").text(tracker++);
+    $("#page16to17").remove();
+    $(".page_six_view").hide();
+    $("canvas").remove();
+    $( ".itemB" ).html("");
+    setTimeout(function(){$(".page_six_view").show();}, 1000); 
+    generate_WebGL_Context(
+      "Task3",
+      ['<h2>Task3 - CityPollution (3/4)</h2>','<b>A</b> to <b>F</b>'],
+      "#page17to18",
+      projection_a_to_f
+    );
+  });
+
+  //to 4/4 task3
+  $("#page17to18").click(function(){
+    $(".tracker").text(tracker++);
+    $("#page17to18").remove();
+    $(".page_six_view").hide();
+    $("canvas").remove();
+    $( ".itemB" ).html("");
+    setTimeout(function(){$(".page_six_view").show();}, 1000); 
+    generate_WebGL_Context(
+      "Task3",
+      ['<h2>Task3 - CityPollution (4/4)</h2>','<b>G</b> to <b>L</b>'],
+      "#page18to19",
+      projection_g_to_l
+    );
+  });
+ 
+
+  $("#page18to19").click(function(){
+    $(".tracker").text(tracker++);
+    $("#page18to19").hide();
+    $(".page_six_view").hide();
+    $("canvas").remove();
+    $(".page_end").show();
+  });
+ 
+  $("#page19to20").click(function(){
+    $(".tracker").text(tracker++);
+    $(".page_end").html("<center><div style='margin-top:100px;font-size:40px'>Congratulations!!!<br>You finished all tests.<br>Thank you.</div></canter>");
+  });
+
+  // use driver.js to make the 'how-to-use'
+  function steps_task1(){
+    let driver = new Driver({
+        allowClose: true, // Whether clicking on overlay should close or not
+        overlayClickNext: true, // Should it move to next step on 
+        doneBtnText: 'Got it ', // Text on the final button
+        closeBtnText: 'Close', // Text on the close button for this step
+        nextBtnText: 'Got it ', // Next button text for this step
+        prevBtnText: 'Back', // Previous button text for this step
+        showCloseButton: false, // Do not show control buttons in footer
+        keyboardControl: false,
+        animate: false,
+        onNext: (Element) => {
+          $(".driver-prev-btn").hide();
+          
+        },      // Called when moving to next step on any step
+        onReset: (Element) => {
+          $(":not(#driver-popover-item)").css("pointer-events","auto");
+        
+        }
+      });
+      driver.defineSteps([
+      {
+        element: '#item0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'test unit',
+          description: '<span style="font-size:13px">This is a test unit, the left part is the structure you need to focus, while the right part includes the extra information and options.</span>',
+          position: 'right'
+        }
+      },      {
+        element: '#item0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'test unit',
+          description: '<span style="font-size:13px">This is a test unit, the left part is the structure you need to focus, while the right part includes the extra information and options.</span>',
+          position: 'right'
+
+        }
+      },{
+        element: '#cvs0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'Scatterplot',
+          description: '<span style="font-size:13px">The structure of scatterplot is generated by a projection method, and colored by our explanations. Y can rotate and zoom with you mouse.</span>',
+          position: 'top'
+
+        }
+      },
+      {
+        element: '#panel0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'Extra information and options',
+          description: '<span style="font-size:13px">You can check the meaning of each color with the legend, also you can resize the point with the slider bar. </span>',
+          position: 'right'
+        }
+      },
+
+      {
+        element: '.legend',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'legend',
+          description: '<span style="font-size:13px">You can select 3 attributes that shows interesting structures in left view, click twice to cancel the selection.</span>',
+          position: 'right'
+        }
+      },
+      {
+        element: '.q0d',
+        popover: {
+          title: 'slider bar',
+          description: 'You can also control the point size of left part with the slider bar.',
+          position: 'right'
+        }
+      },
+      {
+        element: '.method',
+        popover: {
+          className: 'first-step-popover-class',
+          title: '<span style="font-size:12px;">Only used to distinguish different test units.</span>',
+          position: 'right'
+        }
+      },
+      {
+        element: '#page2to3',
+        popover: {
+          showCloseButton: false,
+          title: '<span style="font-size:12px;">Click the button to start the test.</span>',
+          position: 'right'
+        }
+      },
+    ]);
+    driver.start();  
+    $(":not(#driver-popover-item)").css("pointer-events","none");
+ 
+  }
+
+  // use driver.js to make the 'how-to-use'
+  function steps_task2(){
+      let driver = new Driver({
+        allowClose: true, // Whether clicking on overlay should close or not
+        overlayClickNext: true, // Should it move to next step on 
+        doneBtnText: 'Got it ', // Text on the final button
+        closeBtnText: 'Close', // Text on the close button for this step
+        nextBtnText: 'Got it ', // Next button text for this step
+        prevBtnText: 'Back', // Previous button text for this step
+        showCloseButton: false, // Do not show control buttons in footer
+        keyboardControl: false,
+        animate: false,
+        onNext: (Element) => {
+          $(".driver-prev-btn").hide();
+          
+        },      // Called when moving to next step on any step
+        onReset: (Element) => {
+          $(":not(#driver-popover-item)").css("pointer-events","auto");
+        
+        }
+      });
+      driver.defineSteps([
+      {
+        element: '#item0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'test unit',
+          description: '<span style="font-size:13px">You can find six units on next page. Each of them includes two parts.</span>',
+          position: 'right'
+        }
+      },      {
+        element: '#item0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'test unit',
+          description: '<span style="font-size:13px">You can find six units on the same page in task one and task two. Each of them includes two parts.</span>',
+          position: 'right'
+
+        }
+      },{
+        element: '#cvs0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'part one',
+          description: '<span style="font-size:13px">You see the projections here, all points are colored by our explanation, you can rotate and zoom with you mouse.</span>',
+          position: 'top'
+
+        }
+      },
+      {
+        element: '#panel0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'part two',
+          description: '<span style="font-size:13px">The panel of options, use the checkbox to answer questions of each task. </span>',
+          position: 'right'
+        }
+      },
+
+      {
+        element: '.quest',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'Questions',
+          description: '<span style="font-size:13px">Based on the specific task (like shows interesting sturctures) to select the best, top3 or the worst one.</span>',
+          position: 'right'
+        }
+      },
+      {
+        element: '.q0d',
+        popover: {
+          title: 'slider bar',
+          description: 'You can also control the point size of left part with the slider bar.',
+          position: 'right'
+        }
+      },
+      {
+        element: '.method',
+        popover: {
+          className: 'first-step-popover-class',
+          title: '<span style="font-size:12px;">Only used to distinguish different test units.</span>',
+          position: 'right'
+        }
+      },
+      {
+        element: '#page8to9',
+        popover: {
+          showCloseButton: false,
+          title: '<span style="font-size:12px;">Click the button to the next page.</span>',
+          position: 'right'
+        }
+      },
+    ]);
+    driver.start();  
+    $(":not(#driver-popover-item)").css("pointer-events","none");
+
+  }
+
+  // use driver.js to make the 'how-to-use'
+  function steps_task3(){
+    let driver = new Driver({
+        allowClose: true, // Whether clicking on overlay should close or not
+        overlayClickNext: true, // Should it move to next step on 
+        doneBtnText: 'Got it ', // Text on the final button
+        closeBtnText: 'Close', // Text on the close button for this step
+        nextBtnText: 'Got it ', // Next button text for this step
+        prevBtnText: 'Back', // Previous button text for this step
+        showCloseButton: false, // Do not show control buttons in footer
+        keyboardControl: false,
+        animate: false,
+        onNext: (Element) => {
+          $(".driver-prev-btn").hide();
+          
+        },      // Called when moving to next step on any step
+        onReset: (Element) => {
+          $(":not(#driver-popover-item)").css("pointer-events","auto");
+        
+        }
+      });
+      driver.defineSteps([
+      {
+        element: '#item0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'test unit',
+          description: '<span style="font-size:13px">You can find six units on next page. Each of them includes two parts.</span>',
+          position: 'right'
+        }
+      },      {
+        element: '#item0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'test unit',
+          description: '<span style="font-size:13px">You can find six units on next page. Each of them includes two parts.</span>',
+          position: 'right'
+
+        }
+      },{
+        element: '#cvs0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'Scatterplot',
+          description: '<span style="font-size:13px">You see the projections here, all points are colored by our explanation, you can rotate and zoom with you mouse.</span>',
+          position: 'top'
+
+        }
+      },
+      {
+        element: '#panel0',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'Options',
+          description: '<span style="font-size:13px">The panel of options, use the checkbox to answer questions of each task. </span>',
+          position: 'right'
+        }
+      },
+
+      {
+        element: '.quest',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'Questions',
+          description: '<span style="font-size:13px">Based on the specific task (like shows interesting sturctures) to select the best, top3 or the worst one.</span>',
+          position: 'right'
+        }
+      },
+      {
+        element: '.q0d',
+        popover: {
+          title: 'slider bar',
+          description: 'You can also control the point size of left part with the slider bar.',
+          position: 'right'
+        }
+      },
+      {
+        element: '.method',
+        popover: {
+          className: 'first-step-popover-class',
+          title: '<span style="font-size:12px;">Only used to distinguish different test units.</span>',
+          position: 'right'
+        }
+      },
+      {
+        element: '.dim_test',
+        popover: {
+          className: 'first-step-popover-class',
+          title: 'Steps panel',
+          description: '<span style="font-size:12px;">You see four buttons before the NEXT button, the actived one is the current activated you should look at. </span>',
+          position: 'top'
+        }
+      },
+      {
+        element: '.dim_test > .atx',
+        popover: {
+          className: 'first-step-popover-class',
+          title: '<span style="font-size:12px;">If you finished the questions, you can click the box to go next attribute.</span>',
+          position: 'top'
+        }
+      },
+      {
+        element: '.dim_test > img',
+        popover: {
+          className: 'first-step-popover-class',
+          title: '<span style="font-size:12px;">You can also click the arrowhead to go next.</span>',
+          position: 'top'
+        }
+      },
+      {
+        element: '#page14to15',
+        popover: {
+          showCloseButton: false,
+          title: '<span style="font-size:12px;">If you finished the previous four tasks, you would reach here, then you can click here to go next.</span>',
+          position: 'top'
+        }
+      },
+    ]);
+    driver.start();  
+    $(":not(#driver-popover-item)").css("pointer-events","none"); 
+  }
+ 
+});
+
+
+
+
+
+
+/*
+ - page-content
+ - button0id
+ - page number
+ 
+start intro1  task1.1 task1.2	task1.3	task1.4	task1.5	task1.6 intro2	task2.1	task2.2	task2.3	task2.4	intro3  task3.1	task3.2	task3.3	task3.4	  question E-N-D
+    p1d     p2d     p3d     p4d     p5d     p6d     p7d     p8d     p9d    p10d     p11d    p12d    p13d    p14d    p15d   p16d     p17d    p18d      p19d
+  1      2       3       4       5       6       7       8       9      10       11      12      13      14      15      16      17      18       19      20   
+
+*/
+
+</script>

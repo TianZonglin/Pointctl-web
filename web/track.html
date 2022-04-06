@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>div样式</title>
+        <meta charset = "utf-8">
+        <!-- 使用CSS样式来控制div布局 -->
+ 
+        <style type="text/css">
+            /*定义全局的div布局*/
+            div.global{
+                /*设置宽度，设置百分比可以根据浏览器自适应宽度*/
+                width: 100%;
+                /*设置高度，950px是设置是实体高度，不能自适应的*/
+                height: 800px;
+                /*设置背景颜色，方便区分布局*/
+                background-color: rgb(107, 107, 107); 
+            }
+   
+            body{
+                margin-left: 210px;
+                margin-right: 210px;
+                user-select: none;
+                color: rgb(255, 254, 238);
+            }
+
+            .heading{
+                width: 100%;
+                height: 50px;
+                line-height: 50px;
+                background-color: #696969;
+            }
+            .content_1{
+                width: 25%;
+                height: 400px;
+                
+                /*定义浮动，不定义的话，界面会乱*/
+                float: left;
+            }
+            .content_2{
+                width: 25%;
+                height: 400px;
+                
+                float: right;
+            }
+            .color1{
+                background-color: #aaaaaa;
+            }
+            .color2{
+                background-color: #929292;
+            }
+
+            .foot{
+                width: 33.333%;
+                height: 80px;
+                float: left;
+                font-weight: 600;
+            }
+
+
+            .floor{
+                /*删除浮动，不然会被其他的浮动给遮住*/
+                clear: both;
+                height: 55px;
+                background-color: #646464;
+                line-height: 60px;
+                padding: 10px;
+                
+            }
+
+            .footer-btn{
+
+                margin-top: 10px;
+                font-size: 25px;
+                color: white;
+                background-color: #525252;
+                border-radius: 5px;
+            }
+
+            .subtitle{
+                margin-left: 10px;
+            }
+
+
+
+
+
+        </style>
+    </head>
+    <body>
+        <!-- 在这里控制全局的页面，定义div的id是"global" -->
+        <div class="global">
+            <div class="heading" style="font-weight: 800;">
+                <h4 class="subtitle">User study for the quality of explanations.&emsp;&emsp;<a style="color:white" href="../web/frame+track.html">Focus mode</a></h4>
+            </div>
+            <div class="gl content_1 color1"></div>
+            <div class="gl content_1 color2"></div>
+            <div class="gl content_1 color1"></div>
+            <div class="gl content_1 color2"></div>
+            <div style="clear:both"></div>
+            <div class="gl content_2 color1"></div>
+            <div class="gl content_2 color2"></div>
+            <div class="gl content_2 color1"></div>
+            <div class="gl content_2 color2"></div>
+            <div class="floor">
+                <div class="foot">
+                    <button class="footer-btn" style="float: left;">BACK</button>
+                </div>
+                <div class="foot">
+                    <div style="text-align: center;"><span id="timer">time</span> / <span>process</span></div>
+                </div>
+                <div class="foot">
+                    <button class="footer-btn" style="float: right;">NEXT</button>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        ///TODO-2 monitor mouse here also.
+        var start = new Date;
+
+        setInterval(function() {
+            $('#timer').text(parseInt((new Date - start) / 1000) + " Seconds");
+        }, 1000);
+    </script>
+    <script type="module">
+
+        import * as THREE from './build/three.module.js';
+
+        import Stats from './examples/jsm/libs/stats.module.js';
+        import { GPUStatsPanel } from './examples/jsm/utils/GPUStatsPanel.js';
+
+        import { GUI } from './examples/jsm/libs/dat.gui.module.js';
+        import { OrbitControls } from './examples/jsm/controls/OrbitControls.js';
+        import { Line2 } from './examples/jsm/lines/Line2.js';
+        import { LineMaterial } from './examples/jsm/lines/LineMaterial.js';
+        import { LineGeometry } from './examples/jsm/lines/LineGeometry.js';
+        import * as GeometryUtils from './examples/jsm/utils/GeometryUtils.js';
+
+
+        function gl(dataSrc,obj){
+
+ 
+            let renderer, scene, camera, controls;
+            let stats, gpuPanel;
+            let gui;
+
+            // viewport
+            let insetWidth;
+            let insetHeight;
+
+            let minX=0,minY=0,minZ=0,maxX=0,maxY=0,maxZ=0;
+
+            init();
+            animate();
+
+            function init() {
+
+                renderer = new THREE.WebGLRenderer( { antialias: true } );
+                renderer.setPixelRatio( 0.1 );
+                renderer.setClearColor( 0x000000, 0.0 );
+                renderer.setSize( obj.innerWidth(), obj.innerHeight() );
+                //renderer.setSize( 300, 300 );
+                obj.append( renderer.domElement );
+
+                scene = new THREE.Scene();
+                const light = new THREE.AmbientLight( 0xffffff ); // soft white light
+                scene.add( light );
+                scene.background = new THREE.Color( 0xffffff );
+
+
+                
+                camera = new THREE.PerspectiveCamera( 1, obj.innerWidth() / obj.innerHeight(), 1, 2000 );
+                //console.log(obj.innerWidth());
+                let amount = parseInt( window.location.search.substr( 1 ) ) || 45;
+                camera.position.set( amount, amount, amount );
+                camera.lookAt( 0, 0, 0 );
+    
+                controls = new OrbitControls( camera, renderer.domElement );  
+                //// Orbit controls allow the camera to orbit around a target.
+                //// To use this, as with all files in the /examples directory, you will have to include the file separately in your HTML.
+                controls.minDistance = 0;
+                controls.maxDistance = 100;
+
+
+                ///left-bottom view
+
+                let mesh;
+              
+                const count = Math.pow( amount, 3 );
+                const matrix = new THREE.Matrix4();
+                const geometry4 = new THREE.IcosahedronGeometry( 0.2, 3 );
+                const material = new THREE.MeshLambertMaterial();
+                //.emissive = black ... default is black
+
+
+                $.ajaxSettings.async = false;
+                $.getJSON(dataSrc,function(result){
+                    mesh = new THREE.InstancedMesh( geometry4, material, result.length );
+                    for(let i = 0; i < result.length; i++){
+                        let loc = result[i].locate;
+                        let rgb = result[i].color;
+                        matrix.setPosition( loc[0], loc[1], loc[2]);
+                        if(minX<loc[0]) minX = loc[0];
+                        if(minY<loc[1]) minY = loc[1];
+                        if(minZ<loc[2]) minZ = loc[2];
+                        if(maxX>loc[0]) maxX = loc[0];
+                        if(maxY>loc[1]) maxY = loc[1];
+                        if(maxZ>loc[2]) maxZ = loc[2];
+                        mesh.setMatrixAt( i, matrix );
+                        //console.log(rgb);
+                        mesh.setColorAt( i, new THREE.Color("rgb("+Math.floor(rgb[0]*255)+","+ Math.floor(rgb[1]*255)+","+ Math.floor(rgb[2]*255)+")"));
+                        let color = new THREE.Color("rgb("+Math.floor(rgb[0]*255)+","+ Math.floor(rgb[1]*255)+","+ Math.floor(rgb[2]*255)+")");
+                        //console.log(color.getHex());
+                    }
+                    //console.log(mesh.count);
+                });
+                $.ajaxSettings.async = true;
+
+                //$.getJSON(00)
+
+
+                scene.add( mesh );
+                
+
+                obj[0].addEventListener( 'resize', onWindowResize );
+                onWindowResize();
+
+                stats = new Stats();
+                document.body.appendChild( stats.dom );
+
+                gpuPanel = new GPUStatsPanel( renderer.getContext() );
+                stats.addPanel( gpuPanel );
+                stats.showPanel( 0 );
+
+
+                initGui();
+
+
+            }
+
+            function onWindowResize() {
+
+                camera.aspect = obj.innerWidth() / obj.innerHeight();
+                camera.updateProjectionMatrix();
+
+                renderer.setSize( obj.innerWidth(), obj.innerHeight() );
+
+                insetWidth = obj.innerHeight() / 3; // square
+                insetHeight = obj.innerHeight() / 3;
+    
+
+            }
+
+            function animate() {
+
+                requestAnimationFrame( animate );
+
+                
+
+                // main scene
+
+                renderer.setClearColor( 0x000000, 0 );
+
+                renderer.setViewport( 0, 0, obj.innerWidth(), obj.innerHeight() );
+
+                // renderer will set this eventually
+                ////matLine.resolution.set( window.innerWidth, window.innerHeight ); // resolution of the viewport
+
+                gpuPanel.startQuery();
+                renderer.render( scene, camera );
+                gpuPanel.endQuery();
+
+                // inset scene
+
+                renderer.setClearColor( 0x222222, 1 );
+
+                renderer.clearDepth(); // important!
+
+                renderer.setScissorTest( true );
+
+                renderer.setScissor( 20, 20, insetWidth, insetHeight );
+
+                renderer.setViewport( 20, 20, insetWidth, insetHeight );
+    
+                // renderer will set this eventually
+                ////matLine.resolution.set( insetWidth, insetHeight ); // resolution of the inset viewport
+    
+                renderer.setScissorTest( false );
+                stats.update();
+
+            }
+
+            //
+
+            function initGui() {
+
+
+
+            }
+            
+        }
+
+
+        var list = ["001.json", "001.json", "001.json", "001.json", "001.json", "001.json", "001.json", "001.json"];//
+        $(".gl").each(function (index, item) {
+ 
+            gl(list[index], $(item));
+        });
+ 
+    </script>
+</html>

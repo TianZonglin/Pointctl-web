@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - instancing - raycast</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="pre/jquery.slider.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+        <script src="pre/jquery.slider.min.js"></script>
+	</head>
+	<body>
+		<!-- Import maps polyfill -->
+		<!-- Remove this when import maps will be widely supported -->
+ 
+        <input id="SliderSingle" type="slider" name="price" value="0.9" style="margin-top: 50px;"/>
+
+        <br><br><br><br><br><br>
+
+
+		<script type="module">
+
+
+			import * as THREE from './build/three.module.js';
+			import Stats from './examples/jsm/libs/stats.module.js';
+			import { GUI } from './examples/jsm/libs/lil-gui.module.min.js';
+			import { OrbitControls } from "./examples/jsm/controls/OrbitControls.js";
+
+			let camera, scene, renderer, controls, stats;
+
+			let mesh;
+			const amount = parseInt( window.location.search.slice( 1 ) ) || 30;
+			const count = Math.pow( amount, 3 );
+
+			const raycaster = new THREE.Raycaster();
+			const mouse = new THREE.Vector2( 1, 1 );
+
+			const color = new THREE.Color();
+			const white = new THREE.Color().setHex( 0xffffff );
+
+			init();
+			animate();
+
+
+
+			function init() {
+
+				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 100 );
+				camera.position.set( amount, amount, amount );
+				camera.lookAt( 0, 0, 0 );
+
+				scene = new THREE.Scene();
+
+				const light = new THREE.HemisphereLight( 0xffffff, 0x888888 );
+				light.position.set( 0, 1, 0 );
+				scene.add( light );
+
+				const geometry = new THREE.IcosahedronGeometry( 0.5, 1 );
+				const material = new THREE.MeshPhongMaterial( { color: 0xffffff } );
+
+				mesh = new THREE.InstancedMesh( geometry, material, count );
+
+				let i = 0;
+				const offset = ( amount - 1 ) / 2;
+
+				const matrix = new THREE.Matrix4();
+
+				for ( let x = 0; x < amount; x ++ ) {
+
+					for ( let y = 0; y < amount; y ++ ) {
+
+						for ( let z = 0; z < amount; z ++ ) {
+
+							matrix.setPosition( offset - x, offset - y, offset - z );
+
+							mesh.setMatrixAt( i, matrix );
+							mesh.setColorAt( i, color );
+
+							i ++;
+
+						}
+
+					}
+
+				}
+
+				scene.add( mesh );
+                console.log(mesh);
+                function updateGroupGeometry( mesh, g ) {
+
+                    mesh.geometry.dispose();
+                    mesh.geometry = g;
+
+                    // these do not update nicely together if shared
+
+                }
+
+				//
+
+				const gui = new GUI();
+				gui.add( mesh, 'count', 0, count );
+                gui.add( {"t":2}, 't', 0.1, 2 ).onChange( function (val) {
+                    updateGroupGeometry( mesh,new THREE.IcosahedronGeometry(val, 1));
+                });
+                // render all sliders
+                jQuery("#SliderSingle").slider({ 
+                from: 0.1, to: 2, 
+                round: 1,
+                //scale: ['|', '|', '|', '|', '|', '|', '|'],
+                step: 0.01, 
+                format: { format: '##.0', locale: 'uk' }, 
+                dimension: '', 
+                skin: "round_plastic",
+                onstatechange: function( value ){
+                    console.log(value);
+                    updateGroupGeometry( mesh,new THREE.IcosahedronGeometry(value, 1));
+                }
+                });
+
+                $(".jslider").css("width","30%");
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				controls = new OrbitControls( camera, renderer.domElement );
+				controls.enableDamping = true;
+				controls.enableZoom = false;
+				controls.enablePan = false;
+
+				stats = new Stats();
+				document.body.appendChild( stats.dom );
+
+				window.addEventListener( 'resize', onWindowResize );
+				document.addEventListener( 'mousemove', onMouseMove );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function onMouseMove( event ) {
+
+				event.preventDefault();
+
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				controls.update();
+
+				raycaster.setFromCamera( mouse, camera );
+
+				const intersection = raycaster.intersectObject( mesh );
+
+				if ( intersection.length > 0 ) {
+
+					const instanceId = intersection[ 0 ].instanceId;
+
+					mesh.getColorAt( instanceId, color );
+
+					if ( color.equals( white ) ) {
+
+						mesh.setColorAt( instanceId, color.setHex( Math.random() * 0xffffff ) );
+
+						mesh.instanceColor.needsUpdate = true;
+
+					}
+
+				}
+
+				render();
+
+				stats.update();
+
+			}
+
+			function render() {
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+	</body>
+</html>

@@ -1,0 +1,234 @@
+  /* 每一列图片包含层 */
+  .item {
+    margin-bottom: 20px;
+    break-inside: avoid;
+    background: #f8f7f8;
+    border-radius: 5px;
+    padding:5px;
+    position: relative;
+    height:310px;
+    margin-bottom: 80px;
+  }
+  .item:hover {
+    box-shadow: 3px 0px #a2a4c6; 
+  }
+ 
+ 
+  .dim_test{
+    float: right;
+    display: none;
+  }
+  .dim_test > span{
+    display: inline-block;
+    vertical-align: top;
+  }
+  .dim_test > img{
+    line-height: 40px;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  body{
+    font-family: HK Grotesk;
+      margin-left: 210px;
+      margin-right: 210px;
+      user-select: none;
+      background-color: rgb(202, 209, 224);
+  }
+
+  .method{
+    background-color: rgb(102, 110, 128); 
+    color: rgb(255, 255, 255); 
+    padding: 1px 6px 2px 6px; 
+    border-radius: 2px;
+   }
+   .itemA{
+    float:left; width: 75%; margin-bottom: 20px;height:300px; background-color: rgb(255, 255, 255);
+   }
+   .itemB{
+    float:left; width: 25%; margin-bottom: 20px;height:300px; background-color: rgb(201, 218, 248);
+   }
+
+ 
+  button,.btnn,
+  input {
+    font-family: inherit;
+    font-size: 100%;
+    background: #dadada;
+    border: 1px solid #000000;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+  }
+  button {
+    cursor: pointer;
+  }
+
+  .blocks{
+    font-family: inherit;
+    font-size: 100%;
+    background: #dadada;
+    border: 1px solid #000000;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+
+  .blocks2{
+    font-family: inherit;
+    font-size: 19px;
+    font-weight: 600;
+    border: 0px solid #000000;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+  }
+
+  .legend{
+    display: none;
+    border-top:1px dotted #000;
+    border-bottom:1px dotted #000;
+    margin-left: 5px;
+    margin-right: 15px;
+    border-radius: 5px;
+  }
+
+  .lg_unit{
+    padding: 5px 2px 0px 4px;
+    border: 1px dotted #000;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .lg_unit:hover{
+    background-color: rgb(189, 189, 189);
+  }
+  .gray{
+    background-color: rgb(189, 189, 189);
+  }
+
+.arrow_box{animation: glow 800ms ease-out infinite alternate; }
+@keyframes glow {
+    0% {
+    }
+    100% {
+      box-shadow: 0 0 5px rgb(221 159 75), 0px 0px 25px 5px rgb(221 159 75), 0 1px 0 rgb(221 159 75);
+    }
+}
+
+ 
+.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.35;
+    
+}
+ 
+
+  #root {
+    margin: 0 auto;
+    width: 1300px;
+    column-count: 3;
+    column-gap: 20px;
+
+  }
+
+
+/* Our default values set as CSS variables */
+:root {
+  --color-bg: white;
+  --color-text-main: #000000;
+  --color-primary: #D7F5EF;
+  --wrapper-height: 87vh;
+  --image-max-width: 300px;
+  --image-margin: 3rem;
+  --font-family: "HK Grotesk";
+  --font-family-header: "HK Grotesk";
+}
+
+/* Basic page style resets */
+* {
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+
+/* Import fonts */
+@font-face {
+  font-family: HK Grotesk;
+  src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Regular.otf?v=1603136326027")
+    format("opentype");
+}
+@font-face {
+  font-family: HK Grotesk;
+  font-weight: bold;
+  src: url("https://cdn.glitch.me/605e2a51-d45f-4d87-a285-9410ad350515%2FHKGrotesk-Bold.otf?v=1603136323437")
+    format("opentype");
+}
+
+ 
+
+/* Navigation grid */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem auto 0;
+  padding: 1rem 0 0.75rem 0;
+  width: 100%;
+  flex-wrap: wrap;
+  border-top: 4px solid #f3f3f3;
+}
+
+.footer a:not(.btn--remix):link,
+a:not(.btn--remix):visited {
+  font-family: HK Grotesk;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 1.1rem;
+  color: #000;
+  text-decoration: none;
+  border-style: none;
+}
+.footer a:hover {
+  background: var(--color-primary);
+}
+
+.footer .links {
+  padding: 0.5rem 1rem 1.5rem;
+  white-space: nowrap;
+}
+ 
+
+p,
+label {
+  font-size: 1.25rem;
+}
+
+/* Title h1 style */
+h1 {
+  color: #65647c;
+  font-family: HK Grotesk;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 50px;
+  line-height: 105%;
+  margin: 2rem 0 0;
+}
+
+h3 {
+  color: #65647c;
+ 
+}
+ 
+
+label {
+  color: #000000;
+  font-weight: bold;
+}
+
+ 
+h2 {
+  color: #65647c;
+}
+ 
