@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+    <style>
+
+        .track-monitor{
+         
+            background-color:orange;
+        }
+        .track-coordinate{
+             
+            background-color:purple;
+            color:white;
+            height:25px;
+            line-height:25px;
+            font-size:12px;
+        }
+        .track-coordinate-list{
+         
+            font-size:12px;
+            width:100%;
+            word-break:break-word;
+             
+        }
+    </style>
+    <script>
+        window.addEventListener('xx',function(){
+         
+            var pad = document.body;
+            var monitor = document.getElementsByClassName('track-monitor')[0];
+            var coordinate = document.getElementsByClassName('track-coordinate')[0];
+            var clist = document.getElementsByClassName('track-coordinate-list')[0];
+            var reset = document.getElementsByTagName('button')[0];
+            monitor.width = window.innerWidth;
+            monitor.height = window.innerHeight;
+            var context = monitor.getContext('2d');
+            var cset = [];
+            window.addEventListener('resize',function(){ fixSize(); });  
+            pad.addEventListener('mousemove',function(e){   
+                context.strokeStyle = 'white';
+                context.lineTo(e.x,e.y);
+                context.stroke();
+                coordinate.innerHTML = e.x+':'+e.y;
+                cset.push(coordinate.innerHTML);
+                clist.innerHTML = cset.join(',');
+            }); 
+            reset.addEventListener('click',function(){
+                fixSize();
+                cset = [];
+                clist.innerHTML = '';
+                coordinate.innerHTML='在绿色的方块中滑动鼠标';
+            });
+    
+             
+        });
+
+        window.addEventListener('xxx',function(){
+         
+            var pad = document.getElementsByClassName('track-pad')[0];
+            var monitor = document.getElementsByClassName('track-monitor')[0];
+            var coordinate = document.getElementsByClassName('track-coordinate')[0];
+            var clist = document.getElementsByClassName('track-coordinate-list')[0];
+            var reset = document.getElementsByTagName('button')[0];
+            var fixSize = function(){
+            
+                monitor.width = window.innerWidth;
+            };
+            
+            var context = monitor.getContext('2d');
+            var cset = [];
+
+            window.addEventListener('resize',function(){ fixSize(); });
+            
+            var type="a,";//normal
+            pad.addEventListener('mousedown',function(e){ type="b,";});
+            pad.addEventListener('mouseup',function(e){ type="a,";});
+            pad.addEventListener('mousemove',function(e){
+                context.strokeStyle = 'white';
+                context.lineTo(e.x,e.y);
+                context.stroke();
+                coordinate.innerHTML = e.x+':'+e.y;
+                cset.push(type+e.x+','+e.y);
+                clist.innerHTML = cset.join(';');
+            
+            });
+            
+            reset.addEventListener('click',function(){
+                
+                fixSize();
+                cset = [];
+                clist.innerHTML = '';
+                coordinate.innerHTML='在绿色的方块中滑动鼠标';
+            });
+            
+            fixSize();
+            
+        });
+
+        window.addEventListener('load',function(){
+         
+         var pad = document.body;
+         var monitor = document.getElementsByClassName('track-monitor')[0];
+         var coordinate = document.getElementsByClassName('track-coordinate')[0];
+         var clist = document.getElementsByClassName('track-coordinate-list')[0];
+         var reset = document.getElementsByTagName('button')[0];
+         monitor.width = window.innerWidth;
+         monitor.height = window.innerHeight;
+         var context = monitor.getContext('2d');
+         var cset = [];
+         window.addEventListener('resize',function(){ fixSize(); });  
+         let data = "a,498,173;a,499,178;a,502,183;a,502,185;a,503,187;a,504,190;a,505,192;a,506,195;a,507,197;a,508,199;a,509,200;a,509,201;a,510,203;a,511,204;a,512,206;a,513,207;a,514,208;a,516,210;a,518,213;a,520,215;a,523,218;a,526,220;a,528,222;a,530,223;a,532,225;a,533,226;a,534,227;a,535,230;a,536,231;a,537,232;a,538,233;a,540,235;a,541,236;a,543,238;a,545,239;a,548,241;a,550,242;a,553,244;a,556,246;a,560,247;a,564,248;a,568,249;a,571,250;a,572,250;a,575,251;a,577,252;a,578,253;a,579,254;a,580,255;a,580,257;a,580,258;a,584,258;a,588,258;a,596,258;a,607,258;a,624,260;a,640,263;a,655,267;a,672,270;a,682,272;a,687,273;a,690,273;a,694,273;a,701,273;a,718,273;a,739,275;a,751,276;a,754,276;a,755,276;a,756,276;a,758,276;a,759,276;a,760,276;a,762,276;a,764,275;a,765,275;a,766,274;a,768,272;a,768,271;a,770,268;a,771,265;a,772,263;a,773,260;a,774,258;a,775,256;a,776,253;a,778,251;a,779,250;a,781,248;a,782,247;a,783,247;a,784,246;a,785,246;a,786,246;a,788,246;a,790,246;a,792,246;a,794,246;a,795,246;a,797,246;a,798,246;a,800,247;a,801,247;a,803,248;a,806,249;a,809,249;a,811,250;a,813,250;a,816,250;a,818,251;a,820,251;a,823,251;a,826,252;a,829,252;a,834,253;a,839,254;a,844,255;a,848,255;a,853,256;a,855,257;a,856,258;a,857,260;a,858,261;a,859,262;a,860,263;a,862,264;a,864,265;a,866,266;a,869,268;a,872,269;a,874,270;a,875,271;a,876,272;a,877,273;a,878,274;a,879,275;a,881,278;a,882,279;a,884,281;a,887,283;a,889,284;a,892,285;a,894,286;a,895,287;a,896,288;a,896,289;a,896,290;a,896,292;a,896,294;a,896,295;a,896,297;a,896,299;a,896,300;a,896,301;a,895,302;a,896,302;a,898,302;a,899,302;a,901,302;a,903,303;a,904,303;a,905,303;a,906,303;a,908,304;a,909,304;a,910,304;a,911,304;a,912,304;a,913,304;a,914,304;a,914,304;a,915,304;a,916,305;a,916,306;a,916,307;a,916,307;a,916,308;a,915,309;a,915,310;a,914,310;a,913,310;a,911,310;a,910,310;a,909,310;a,908,310;a,907,311;a,904,312;a,903,312;a,901,312;a,896,313;a,892,313;a,887,313;a,881,313;a,876,313;a,871,314;a,867,314;a,864,315;a,861,316;a,858,317;a,852,319;a,847,320;a,839,322;a,834,322;a,824,326;a,814,328;a,803,330;a,791,331;a,778,332;a,765,332;a,754,332;a,742,332;a,731,332;a,721,332;a,711,332;a,702,332;a,696,332;a,688,332;a,683,332;a,674,332;a,665,332;a,656,331;a,647,329;a,633,325;a,623,321;a,616,319;a,607,316;a,602,315;a,599,315;a,595,314;a,593,311;a,591,311;a,589,311;a,586,310;a,584,309;a,579,308;a,575,308;a,571,305;a,568,304;a,562,303;a,560,302;a,558,301;a,558,300;a,558,299;a,557,298;a,555,297;a,553,297;a,551,297;a,550,297;a,552,299;a,553,302;a,553,305;a,553,308;a,553,310;a,551,313;a,549,315;a,548,316;a,546,318;a,545,319;a,544,319;a,542,319;a,539,320;a,536,320;a,533,320;a,530,320;a,526,320;a,525,320;a,524,320;a,523,320;a,522,321;a,522,322;a,521,323;a,521,323;a,521,324;a,521,325;a,521,326;a,521,328;a,522,330;a,523,331;a,525,332;a,527,334;a,529,335;a,531,337;a,531,338;a,533,340;b,534,341;b,535,342;b,537,345;b,538,346;b,541,348;b,543,350;b,546,353;b,549,356;b,552,358;b,556,362;b,559,365;b,562,368;b,565,371;b,568,374;b,574,377;b,578,380;b,581,383;b,586,385;b,589,388;b,592,392;b,596,395;b,599,399;b,602,401;b,606,406;b,611,410;b,616,414;b,621,417;b,624,420;b,631,426;b,634,427;b,640,430;b,642,433;b,644,435;b,649,439;b,652,440;b,656,442;b,660,444;b,663,446;b,666,448;b,668,449;b,671,450;b,673,451;b,674,452;b,676,453;b,678,455;b,680,457;b,683,459;b,687,460;b,690,462;b,694,464;b,696,465;b,698,467;b,699,468;a,700,468;a,702,468;a,702,468;a,704,467;a,705,467;a,708,467;a,711,467;a,715,466;a,719,465;a,723,463;a,726,460;a,728,457;a,728,454;a,728,449;a,728,444;a,728,440;a,729,434;a,731,430;a,731,424;a,732,418;a,733,412;a,733,405;a,733,399;a,733,392;a,733,383;a,733,374;a,733,368;a,733,362;a,734,357;a,734,353;a,734,349;a,734,347;a,734,343;a,734,341;a,733,337;a,732,335;a,731,333;a,731,314;a,730,311;a,729,309;a,728,305;a,727,303;a,726,298;a,724,294;a,723,291;a,722,289;a,722,286;a,722,284;a,722,281;a,722,278;a,722,275;a,722,273;a,722,270;a,722,268;a,722,266;a,722,264;a,724,262;a,725,262;a,726,262;a,727,262;a,729,262;a,730,262;a,734,262;a,738,267;a,742,270;a,745,274;a,749,279;b,752,283;b,756,288;b,759,293;b,764,298;b,768,303;b,773,308;b,778,313;b,783,318;b,788,323;b,793,327;b,799,333;b,806,338;b,811,345;b,816,351;b,820,358;b,823,363;b,826,370;b,828,375;b,830,380;b,832,384;b,835,390;b,839,396;b,840,397;b,841,401;b,844,405;b,845,407;b,847,410;b,848,412;b,849,413;b,849,414;b,850,416;b,851,417;b,853,418;b,856,419;a,858,419;a,861,419;a,862,419;a,864,419;a,865,419;a,866,419;a,868,419;a,869,419;a,872,419;a,876,419;a,880,419;a,884,419;a,888,419;a,890,419;a,892,418;a,894,417;a,896,415;a,896,414;a,896,412;a,897,410;a,898,407;a,899,404;a,899,401;a,901,397;a,902,393;a,902,390;a,903,387;a,904,383;a,905,380;a,908,375;a,910,371;a,911,366;a,914,363;a,916,359;a,917,355;a,920,352;a,921,347;a,922,344;a,923,340;a,924,336;a,924,334;a,924,331;a,925,329;a,925,327;a,925,325;a,926,323;a,926,321;a,926,319;a,926,317;a,926,316;a,926,314;a,926,313;a,926,312;a,925,311;a,925,310;a,924,308;a,924,307;a,925,306;b,927,307;b,928,310;b,930,314;b,931,316;b,932,319;b,934,323;b,936,327;b,938,330;b,941,335;b,944,338;b,946,343;b,948,346;b,950,349;b,951,352;b,951,355;b,951,358;b,952,360;b,952,363;b,953,366;b,953,369;b,953,373;b,953,376;b,953,378;b,953,381;b,953,383;b,953,385;b,952,387;b,952,388;b,951,390;b,951,392;b,950,394;b,950,396;b,950,397;b,949,399;b,949,401;b,948,403;b,948,404;b,948,405;b,948,406;b,948,407;b,948,408;b,948,409;b,948,410;b,948,411;b,948,412;b,948,413;a,948,414;a,947,415;a,949,414;a,950,413;a,950,412;a,950,411;a,950,409;a,950,408;a,951,407;a,951,406;a,952,405;a,953,403;a,955,401;a,956,399;a,958,396;a,960,394;a,962,393;a,964,391;a,965,390;a,967,387;a,968,385;a,969,383;a,970,381;a,970,379;a,970,377;a,971,375;a,971,373;a,972,371;a,973,368;a,974,366;a,975,363;a,977,359;a,979,355;a,981,350;a,981,347;a,982,343;a,982,339;a,982,335;a,983,332;a,984,330;a,985,328;a,986,326;a,987,325;a,988,323;a,989,322;a,991,320;a,992,319;a,992,318;a,993,316;a,993,315;a,993,313;a,994,312;a,994,310;a,995,308;a,996,307;a,997,305;a,998,302;a,999,299;a,1000,297;a,1001,294;a,1002,292;a,1004,288;a,1005,287;a,1006,285;a,1008,283;a,1010,281;a,1012,279;a,1013,278;a,1015,276;a,1016,275;a,1018,273;a,1019,272;a,1019,271;a,1020,269;a,1020,267;a,1021,265;a,1022,264;a,1022,263;a,1023,262;a,1024,261;a,1025,260;a,1026,259;a,1027,257;a,1028,256;a,1029,254;b,1029,255;b,1029,257;b,1029,261;b,1029,265;b,1029,269;b,1030,274;b,1031,279;b,1034,283;b,1034,286;b,1034,290;b,1034,292;b,1035,294;b,1035,295;b,1035,296;b,1035,297;b,1035,298;b,1035,299;b,1035,300;b,1035,301;b,1035,302;b,1035,303;a,1036,304;a,1038,304;a,1042,304;a,1045,303;a,1048,303;a,1056,302;a,1060,302;a,1063,302;a,1066,302;a,1068,302;a,1069,302;a,1070,302;a,1071,302;a,1072,302;a,1075,302;a,1076,302;a,1077,302;a,1078,303;a,1079,303;a,1080,304;a,1081,305;a,1082,306;a,1084,308;a,1085,309;a,1086,310;a,1087,312;a,1087,314;a,1087,318;a,1087,320;a,1087,323;a,1087,325;a,1086,328;a,1086,331;a,1085,334;a,1084,337;a,1083,340;a,1081,344;a,1080,346;a,1078,350;a,1075,354;a,1072,358;a,1069,361;a,1065,364;a,1061,368;a,1058,370;a,1054,372;a,1052,373;a,1050,374;a,1049,375;a,1047,377;a,1047,378;a,1047,379;a,1047,381;a,1047,385;a,1048,386;a,1049,388;a,1050,392;a,1050,394;a,1050,397;a,1050,400;a,1050,404;a,1050,407;a,1050,412;a,1048,416;a,1046,421;a,1044,425;a,1042,428;a,1039,432;a,1037,437;a,1035,440;a,1031,443;a,1027,446;a,1021,450;a,1014,455;a,1008,458;a,1001,463;a,995,467;a,988,471;a,981,473;a,975,476;a,967,480;a,958,482;a,949,486;a,939,489;a,930,490;a,921,495;a,914,496;a,907,498;a,903,499;a,900,500;a,897,500;a,895,502;a,893,503;a,891,504;a,890,504;a,887,505;a,886,506;a,884,507;a,883,508;a,882,509;a,881,510;a,879,511;a,877,512;b,876,513;b,871,516;b,867,517;b,862,518;b,856,519;b,851,520;b,845,520;b,841,521;b,837,522;b,832,523;b,829,524;b,824,524;b,819,526;b,814,526;b,811,527;b,807,528;b,804,528;b,802,528;b,799,529;b,796,529;b,794,529;b,791,530;b,788,530;b,785,531;b,783,531;b,782,531;a,781,531;a,780,532;a,780,533;a,780,534;a,778,534;a,776,534;a,774,535;a,772,536;a,769,536;a,768,536;a,767,536;a,764,536;a,761,536;a,758,536;a,754,536;a,751,536;a,748,536;a,746,536;a,745,536;a,743,536;a,742,536;a,741,536;a,740,536;a,737,537;a,734,537;a,730,537;a,724,537;a,719,537;a,715,537;a,712,537;a,711,538;a,709,539;a,707,539;a,706,540;a,704,540;a,701,541;a,697,541;a,692,541;a,687,541;a,682,541;a,676,542;a,672,542;a,668,542;a,664,542;a,660,542;a,656,542;a,652,542;a,648,542;a,643,542;a,639,542;a,634,542;a,629,541;a,623,540;a,617,539;a,610,535;a,605,535;a,601,533;a,595,531;a,589,528;a,584,526;a,578,524;a,576,524;a,572,521;a,571,521;a,570,520;a,568,519;a,567,518;a,563,517;a,559,515;a,557,514;a,553,513;a,550,512;a,547,511;a,545,510;a,542,510;a,539,509;a,537,509;a,535,509;a,532,508;a,530,508;a,531,508;a,532,508;a,534,508;a,537,508;a,540,508;a,547,508;a,549,507;a,551,505;a,551,504;a,551,503;a,551,502;a,551,501;a,552,500;a,553,499;a,554,499;a,558,499;a,560,499;a,561,499;a,560,498;a,557,498;a,554,497;a,551,497;a,548,497;a,543,496;a,541,495;a,540,495;a,539,495;a,538,495;a,537,495;a,536,495;a,535,495;a,534,495;a,533,495;a,532,495;a,531,495;a,529,495;a,527,495;a,524,494;a,522,494;a,519,494;a,516,494;a,513,494;a,510,494;a,508,494;a,506,494;a,504,494;a,502,494;a,500,494;a,498,494;a,496,494;a,493,494;a,491,494;a,489,494;a,486,494;a,484,494;a,481,494;a,478,494;a,475,494;a,470,493;a,465,492;a,462,492;a,460,492;a,459,493;a,458,493;a,456,494;a,455,495;a,456,495;a,457,495;a,462,495;a,465,495;a,466,495;a,468,495;a,469,495;a,470,495;a,471,495;a,472,495;a,473,496;a,472,496;a,472,496;a,471,496;a,470,496;a,469,496";
+         let arr = data.split(";");
+  
+
+
+         // simplify the same drawing code
+         function drawPoint(x, y, s, c, txt){
+            context.beginPath();  
+            context.arc(x, y, s, 0, Math.PI * 2);
+            context.fillStyle = c;
+            context.fillText(txt, x+8, y+10, 20);
+            context.fill();
+            context.closePath(); 
+         }
+         function drawLine(x1, y1, x2, y2, s, c){
+            context.beginPath(); // !!! use beginPath() and closePath() to keep the drawing (dot and line) independent.
+            context.moveTo(x1, y1);
+            context.lineTo(x2, y2);
+            context.strokeStyle = c;
+            context.lineWidth = s;
+            context.stroke();
+            context.closePath();
+         } 
+
+         // draw the tracking line with no extra signals
+         for(let i=0;i<arr.length;i++){
+            let toX = parseFloat(arr[i].split(",")[1]);
+            let toY = parseFloat(arr[i].split(",")[2]); // remember to transfer str to float!! fuckkk!!!
+            context.strokeStyle = 'white';
+            context.lineWidth = 1;
+            context.lineTo(toX, toY);
+            context.stroke();
+         }
+
+         let drag_counter = 0;
+
+         // draw additional signals, repeat again to avoid overlapping (make the dragging-arrow on the top)
+         for(let i=0;i<arr.length;i++){
+            let toX = parseFloat(arr[i].split(",")[1]);
+            let toY = parseFloat(arr[i].split(",")[2]);  
+            let arrowstartX,arrowstartY;  
+            let linecolor = 'white'; 
+            let linewidth = 2;
+            let arrowslen = 8;
+            let arrowstxt = "";
+            // define the dragging-arrow's style
+            if(arr[i].split(",")[0]=='b'){
+                linecolor = "blue";
+                linewidth = 2;
+                arrowslen = 10;
+            } 
+
+            // to make the arrowhead's direction follows the line's main direction
+            // if use two neighbor tracking point, it could be too sensitive
+            if(i<3){
+                arrowstartX = toX-0.001;
+                arrowstartY = toX-0.001;
+                if(i == 1)
+                    drawPoint(toX, toY, 5, 'green', 'start');
+            }else{
+                arrowstartX = parseFloat(arr[i-3].split(",")[1]);
+                arrowstartY = parseFloat(arr[i-3].split(",")[2]);
+                if(i==(arr.length-1)){
+                    drawPoint(toX, toY, 5, 'red', 'end');
+                }
+            }
+
+            // draw the arrow's body with unique color
+            if(( i + 1 < arr.length && (arr[i].split(",")[0]=='b'&& arr[i+1].split(",")[0]=='b'))){ 
+                drawLine(arr[i].split(",")[1], arr[i].split(",")[2], arr[i+1].split(",")[1], arr[i+1].split(",")[2], linewidth, linecolor);
+            }
+
+            if( i + 1 < arr.length 
+                && ( arr[i].split(",")[0] == 'b'    //type-b draging status 
+                    && arr[i+1].split(",")[0]=='a'  //type-a normal moving status
+                    )
+                ){
+                context.beginPath(); 
+                context.fillStyle = 'blue';
+                context.fillText('drag '+(++drag_counter), toX, toY+20, 100);
+                context.closePath();
+   
+            }
+
+            // draw the arrowhead
+            // - normal arrow - steps is 23 or other value
+            // - unique arrow - to show the 'dragging', the arrowhead is the position that user stop dragging.
+            if( ( i != 0  && i % 23 == 0 && arr[i].split(",")[0]!='b')
+                ||( i + 1 < arr.length 
+                    && ( arr[i].split(",")[0] == 'b'    //type-b draging status 
+                        && arr[i+1].split(",")[0]=='a'  //type-a normal moving status
+                        )
+                    )
+                ) 
+            {
+
+
+                
+                var headlen = arrowslen;    //arrow length/size
+                var theta = 30;             //arrow's angle
+                var arrowX, arrowY;         //arrow's end position
+                // computing
+                var angle = Math.atan2(arrowstartY - toY, arrowstartX - toX) * 180 / Math.PI;
+                // angle's
+                var angle1 = (angle + theta) * Math.PI / 180;
+                var angle2 = (angle - theta) * Math.PI / 180;
+                var topX = headlen * Math.cos(angle1);
+                var topY = headlen * Math.sin(angle1);
+                var botX = headlen * Math.cos(angle2);
+                var botY = headlen * Math.sin(angle2);
+                // prepare for draw
+                context.beginPath(); 
+                
+                arrowX = toX+topX;
+                arrowY = toY+topY;
+                // draw from current position to arrow-upside-end point
+                context.moveTo(toX, toY);
+                context.lineTo(arrowX, arrowY);
+                arrowX = toX+botX;
+                arrowY = toY+botY;
+                // draw from current position to arrow-downside-end position
+                context.moveTo(toX, toY);
+                context.lineTo(arrowX, arrowY);
+                // draw everything
+                context.strokeStyle = linecolor;
+                context.lineWidth = linewidth;
+                
+                context.stroke();
+                context.closePath();
+            }
+         }  
+     });
+    </script>
+</head>
+<body>
+
+    <canvas class="track-monitor"></canvas>
+    <div class="track-coordinate">在绿色的方块中滑动鼠标</div>
+    <button>重置</button>
+    <div class="track-coordinate-list"></div>
+
+</body>
+</html>
