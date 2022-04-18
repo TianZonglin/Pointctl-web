@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TianZonglin/tuchuang/file/driver.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/TianZonglin/tuchuang/file/jquery.slider.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/TianZonglin/tuchuang/file/driver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/TianZonglin/tuchuang/file/jquery.slider.min.js"></script>
+
+
+    <style>
+        *{ 
+            margin:0;
+            padding:0;
+            border:0;
+        }
+        .stage{
+         
+             
+        }
+        .track-monitor{
+          position:absolute;
+            height:976px;
+          width:50%;
+          float:left;
+            background-color:rgb(56, 165, 255);
+        }
+        .track-pad{
+          position:relative;
+          z-index:111;
+            height:976px;
+          width:50%;
+          float:left;
+            background-color:green;
+        }
+        .btn{
+          position:relative;
+          z-index:222;
+        margin-left:500px;
+        margin-top: 400px;;
+          float:left;
+        }
+        .track-coordinate{
+             
+            background-color:purple;
+            color:white;
+            height:25px;
+            line-height:25px;
+            font-size:12px;
+        }
+        .track-coordinate-list{
+         
+            font-size:12px;
+            width:100%;
+            word-break:break-word;
+             
+        }
+    </style>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/build/three.module.js';
+import Stats from 'https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/examples/jsm/libs/stats.module.js';
+import { GUI } from 'https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/examples/jsm/libs/dat.gui.module.js';
+import { OrbitControls } from "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/examples/jsm/controls/OrbitControls.js";
+
+ 
+  // control flag for every canvas
+  let f1,f2,f3,f4,f5,f6,r1,r2,r3,r4,r5,r6;
+  f6=f1=f2=f3=f4=f5=false;	
+  r6=r1=r2=r3=r4=r5=1;	
+  let flag = [f1,f2,f3,f4,f5,f6];
+  let idname = ["#cvs1","#cvs2","#cvs3","#cvs4","#cvs5","#cvs6"];
+  let inputdata = [
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json",
+    "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json"
+  ];
+ 
+  let tracker = 2;
+
+  let fff = true;
+  //labels
+  let projection_a_to_f = ["projection_A","projection_B","projection_C","projection_D","projection_E","projection_F"];
+  let projection_g_to_l = ["projection_G","projection_H","projection_I","projection_J","projection_K","projection_L"];
+  
+
+  // only make the current canvas to update the anime to enhance the performance.
+  function test(canvas_id, flag_id, r, len, src){
+    let camera, scene, renderer, stats;
+    let mesh;
+    const amount = parseInt( window.location.search.substr( 1 ) ) || 45;
+    const count = Math.pow( amount, 3 );
+    const raycaster = new THREE.Raycaster();
+    const matrix = new THREE.Matrix4();
+    camera = new THREE.PerspectiveCamera( 60, 1, 0.1, 2000 );
+    camera.position.set( amount, amount, amount );
+    camera.lookAt( 0, 0, 0 );
+    scene = new THREE.Scene();
+    // without shading
+    const light = new THREE.AmbientLight( 0xffffff ); // soft white light
+    scene.add( light );
+    scene.background = new THREE.Color( 0xffffff );
+
+    const geometry = new THREE.IcosahedronGeometry(0.4, 1 );
+    const material = new THREE.MeshPhongMaterial();
+    const offset = ( amount - 1 ) / 2;
+    $.ajaxSettings.async = false;
+    $.getJSON(src,function(result){
+      mesh = new THREE.InstancedMesh( geometry, material, result.length );
+      for(let i = 0; i < result.length; i++){
+        let loc = result[i].locate;
+        let rgb = result[i].color;
+        matrix.setPosition( loc[0]*50, loc[1]*50, loc[2]*50);
+        mesh.setMatrixAt( i, matrix );
+        mesh.setColorAt( i, new THREE.Color(rgb[0], rgb[1], rgb[2]) );	
+      }
+      //console.log(mesh.count);
+    });
+    $.ajaxSettings.async = true;
+ 
+    scene.add( mesh );
+
+    renderer = new THREE.WebGLRenderer( { antialias: true } );
+    renderer.setPixelRatio( window.devicePixelRatio );//1
+    renderer.setSize( len, len );
+    new OrbitControls( camera, renderer.domElement );
+    stats = new Stats();
+    canvas_id.html("").append( renderer.domElement );
+    canvas_id.append( stats.dom );
+    renderer.render( scene, camera );
+    let isExsit = true;
+    animate();
+    function animate() {
+      requestAnimationFrame( animate );
+ 
+ 
+          renderer.render( scene, camera );
+ 
+ 
+        
+      stats.update();
+    }
+    function cleanup(){
+      try{
+        console.log("clean up this webgl context");
+        renderer.forceContextLoss();
+        renderer.domElement = null;
+        renderer = null;
+        geometry.dispose();
+        material.dispose();
+      }catch(e){
+        console.log("already cleaned up");
+      }
+
+    }
+    // check if the pointer is in a canvas
+ 
+    function updateGroupGeometry( mesh, g ) {
+      mesh.geometry.dispose();
+      mesh.geometry = g;
+    }
+ 
+  }
+
+  //test( $("#cvs0"), true, 0, 435, "https://cdn.jsdelivr.net/gh/TianZonglin/project-compare/001.json" );
+
+        window.addEventListener('load',function(){
+         
+            var pad = document.getElementsByClassName('track-pad')[0];
+            var monitor = document.getElementsByClassName('track-monitor')[0];
+            var coordinate = document.getElementsByClassName('track-coordinate')[0];
+            var clist = document.getElementsByClassName('track-coordinate-list')[0];
+            var reset = document.getElementsByTagName('btn')[0];
+
+             
+            var context = monitor.getContext('2d');
+            var cset = [];
+         let str = "";
+         var fixSize = function(){
+            context.clearRect(0,0,window.innerWidth/2,976);   
+                monitor.width = window.innerWidth/2;
+                monitor.height = 976;
+            };           
+          var type="a,";//normal
+          pad.addEventListener('mousedown',function(e){
+            console.log(1);
+             type="b,";
+             });
+          pad.addEventListener('mouseup',function(e){
+             type="a,";
+             });
+          
+            window.addEventListener('resize',function(){ fixSize(); });
+             
+            pad.addEventListener('mousemove',function(e){
+              if(fff){
+
+              
+                context.strokeStyle = 'white';
+                context.lineTo(e.x,e.y);
+                context.stroke();
+                coordinate.innerHTML = e.x+':'+e.y;
+                cset.push(type+e.x+','+e.y);
+                str = cset.join(';');
+              }
+             
+            });
+             
+            $(document).on('keypress',function(e) {
+              if(e.which == 13) {
+              
+              
+ 
+                context.clearRect(0, 0, window.innerWidth/2,window.innerHeight);
+              fff = false;
+                let arr = str.split(";");
+        
+
+
+                // simplify the same drawing code
+                function drawPoint(x, y, s, c, txt){
+                    context.beginPath();  
+                    context.arc(x, y, s, 0, Math.PI * 2);
+                    context.fillStyle = c;
+                    context.fillText(txt, x+8, y+10, 20);
+                    context.fill();
+                    context.closePath(); 
+                }
+                function drawLine(x1, y1, x2, y2, s, c){
+                    context.beginPath(); // !!! use beginPath() and closePath() to keep the drawing (dot and line) independent.
+                    context.moveTo(x1, y1);
+                    context.lineTo(x2, y2);
+                    context.strokeStyle = c;
+                    context.lineWidth = s;
+                    context.stroke();
+                    context.closePath();
+                } 
+
+                // draw the tracking line with no extra signals
+                for(let i=0;i<arr.length;i++){
+                    let toX = parseFloat(arr[i].split(":")[1]);
+                    let toY = parseFloat(arr[i].split(":")[2]); // remember to transfer str to float!!  
+                    context.strokeStyle = 'white';
+                    context.lineWidth = 1;
+                    context.lineTo(toX, toY);
+                    context.stroke();
+                }
+
+                let drag_counter = 0;
+
+                // draw additional signals, repeat again to avoid overlapping (make the dragging-arrow on the top)
+                for(let i=0;i<arr.length;i++){
+                    let toX = parseFloat(arr[i].split(",")[1]);
+                    let toY = parseFloat(arr[i].split(",")[2]);  
+                    let arrowstartX,arrowstartY;  
+                    let linecolor = 'white'; 
+                    let linewidth = 2;
+                    let arrowslen = 8;
+                    let arrowstxt = "";
+                    // define the dragging-arrow's style
+                    if(arr[i].split(",")[0]=='b'){
+                        linecolor = "blue";
+                        linewidth = 2;
+                        arrowslen = 10;
+                    } 
+
+                    // to make the arrowhead's direction follows the line's main direction
+                    // if use two neighbor tracking point, it could be too sensitive
+                    if(i<3){
+                        arrowstartX = toX-0.001;
+                        arrowstartY = toX-0.001;
+                        if(i == 1)
+                            drawPoint(toX, toY, 5, 'green', 'start');
+                    }else{
+                        arrowstartX = parseFloat(arr[i-3].split(",")[1]);
+                        arrowstartY = parseFloat(arr[i-3].split(",")[2]);
+                        if(i==(arr.length-1)){
+                            drawPoint(toX, toY, 5, 'red', 'end');
+                        }
+                    }
+
+                    // draw the arrow's body with unique color
+                    if(( i + 1 < arr.length && (arr[i].split(",")[0]=='b'&& arr[i+1].split(",")[0]=='b'))){ 
+                        drawLine(arr[i].split(",")[1], arr[i].split(",")[2], arr[i+1].split(",")[1], arr[i+1].split(",")[2], linewidth, linecolor);
+                    }
+
+                    if( i + 1 < arr.length 
+                        && ( arr[i].split(",")[0] == 'b'    //type-b draging status 
+                            && arr[i+1].split(",")[0]=='a'  //type-a normal moving status
+                            )
+                        ){
+                        context.beginPath(); 
+                        context.fillStyle = 'blue';
+                        context.fillText('drag '+(++drag_counter), toX, toY+20, 100);
+                        context.closePath();
+        
+                    }
+
+                    // draw the arrowhead
+                    // - normal arrow - steps is 23 or other value
+                    // - unique arrow - to show the 'dragging', the arrowhead is the position that user stop dragging.
+                    if( ( i != 0  && i % 23 == 0 && arr[i].split(",")[0]!='b')
+                        ||( i + 1 < arr.length 
+                            && ( arr[i].split(",")[0] == 'b'    //type-b draging status 
+                                && arr[i+1].split(",")[0]=='a'  //type-a normal moving status
+                                )
+                            )
+                        ) 
+                    {
+
+
+                        
+                        var headlen = arrowslen;    //arrow length/size
+                        var theta = 30;             //arrow's angle
+                        var arrowX, arrowY;         //arrow's end position
+                        // computing
+                        var angle = Math.atan2(arrowstartY - toY, arrowstartX - toX) * 180 / Math.PI;
+                        // angle's
+                        var angle1 = (angle + theta) * Math.PI / 180;
+                        var angle2 = (angle - theta) * Math.PI / 180;
+                        var topX = headlen * Math.cos(angle1);
+                        var topY = headlen * Math.sin(angle1);
+                        var botX = headlen * Math.cos(angle2);
+                        var botY = headlen * Math.sin(angle2);
+                        // prepare for draw
+                        context.beginPath(); 
+                        
+                        arrowX = toX+topX;
+                        arrowY = toY+topY;
+                        // draw from current position to arrow-upside-end point
+                        context.moveTo(toX, toY);
+                        context.lineTo(arrowX, arrowY);
+                        arrowX = toX+botX;
+                        arrowY = toY+botY;
+                        // draw from current position to arrow-downside-end position
+                        context.moveTo(toX, toY);
+                        context.lineTo(arrowX, arrowY);
+                        // draw everything
+                        context.strokeStyle = linecolor;
+                        context.lineWidth = linewidth;
+                        
+                        context.stroke();
+                        context.closePath();
+                    }
+                }  
+              }
+            });
+             
+            fixSize();
+             
+        });
+    </script>
+</head>
+<body>
+    <div class="stage">
+        <div class="track-pad">
+            <div id="cvs0"></div>
+            </div>
+        
+        <canvas class="track-monitor"></canvas>
+        <div class="track-coordinate">在绿色的方块中滑动鼠标</div>
+        
+        <div class="track-coordinate-list"></div>
+    </div>
+</body>
+</html>
